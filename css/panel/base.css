@@ -1,0 +1,72 @@
+/* ============================================================
+   PAINEL v4.0 — BASE: variáveis, reset e utilitários
+   ============================================================ */
+:root {
+  --bg: #090c11;
+  --panel: #0e131b;
+  --card: #131a25;
+  --card-2: #182131;
+  --field: #0c1119;
+  --line: #222d40;
+  --line-2: #2e3c56;
+  --text: #e8edf6;
+  --text-2: #b4bfd3;
+  --muted: #7f8ca6;
+  --accent: #3f8cff;
+  --accent-2: #2a6fe0;
+  --accent-soft: rgba(63, 140, 255, .14);
+  --live: #ff4559;
+  --ok: #2ed48a;
+  --warn: #ffb224;
+  --danger: #ff5a6c;
+  --gold: #f5c542;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --shadow: 0 8px 28px rgba(0, 0, 0, .35);
+  --font: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --display: "Oswald", "Bebas Neue", "Arial Narrow", var(--font);
+  --mono: ui-monospace, "Cascadia Code", Consolas, Menlo, monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--text);
+  font-family: var(--font); font-size: 14px; line-height: 1.45;
+  overflow: hidden; -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, p { margin: 0; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+code { font-family: var(--mono); font-size: .86em; background: rgba(255, 255, 255, .06); padding: 1px 6px; border-radius: 5px; color: #cfe0ff; overflow-wrap: anywhere; }
+a { color: var(--accent); }
+[hidden] { display: none !important; }
+b, strong { font-weight: 650; }
+
+/* barras de rolagem discretas */
+* { scrollbar-width: thin; scrollbar-color: #2b3850 transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #2b3850; border-radius: 8px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: #3a4a69; border: 2px solid transparent; background-clip: padding-box; }
+
+/* ícones */
+.ico { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ico.big { width: 40px; height: 40px; stroke-width: 1.4; opacity: .55; }
+
+/* utilitários */
+.muted { color: var(--muted); }
+.small { font-size: 12.5px; }
+.row-gap { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.row-gap.between { justify-content: space-between; align-items: flex-end; }
+.row-gap.center { justify-content: center; }
+.grow { flex: 1 1 0; min-width: 0; }
+.sep { border: 0; border-top: 1px solid var(--line); margin: 16px 0; }
+.empty { color: var(--muted); text-align: center; padding: 22px 12px; font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { * { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+
+/* O esquema escuro nativo (campos, rolagem) NÃO pode valer na prévia: um iframe com color-scheme
+   diferente do pai ganha fundo opaco e esconderia a transparência das Browser Sources. */
+.topbar, .content, .modal-overlay, .toasts { color-scheme: dark; }
+.dock { color-scheme: normal; }

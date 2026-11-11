@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base href="../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte — Escalação</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/arte.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body class="art-body">
+
+<div class="art-wrapper" id="artWrapper">
+
+  <!-- cada lado é uma coluna. v5.1: os reservas ocupam o lugar dos titulares (palco); no modo "embaixo" (v5.0) aparece o painel #artBench* -->
+  <div class="art-side" id="artSideHome">
+    <div class="art-container" id="artContainerHome">
+      <div class="art-topbar" id="artTopbarHome">
+        <img class="art-crest" id="artCrestHome" src="" alt="Escudo" style="display:none;">
+        <h1 class="art-team-name" id="artTeamNameHome">MANDANTE</h1>
+        <span class="art-bench-tag" id="artBenchTagHome">RESERVAS</span>
+      </div>
+      <div class="art-divider" id="artDividerHome"></div>
+      <!-- v5.1: palco com dois painéis sobrepostos — titulares e reservas trocam de lugar deslizando -->
+      <div class="art-stage" id="artStageHome">
+        <div class="art-lineup art-pane art-pane-starters" id="artLineupHome"></div>
+        <div class="art-pane art-pane-bench" id="artBenchPaneHome"><div class="art-lineup art-bench-track" id="artBenchTrackHome"></div></div>
+      </div>
+    </div>
+    <div class="art-container art-bench" id="artBenchHome" hidden>
+      <div class="art-topbar art-bench-bar"><h2 class="art-bench-title" id="artBenchTitleHome">RESERVAS</h2></div>
+      <div class="art-divider"></div>
+      <div class="art-lineup" id="artBenchListHome"></div>
+    </div>
+  </div>
+
+  <div class="art-side" id="artSideAway">
+    <div class="art-container" id="artContainerAway">
+      <div class="art-topbar" id="artTopbarAway">
+        <img class="art-crest" id="artCrestAway" src="" alt="Escudo" style="display:none;">
+        <h1 class="art-team-name" id="artTeamNameAway">VISITANTE</h1>
+        <span class="art-bench-tag" id="artBenchTagAway">RESERVAS</span>
+      </div>
+      <div class="art-divider" id="artDividerAway"></div>
+      <!-- v5.1: palco com dois painéis sobrepostos — titulares e reservas trocam de lugar deslizando -->
+      <div class="art-stage" id="artStageAway">
+        <div class="art-lineup art-pane art-pane-starters" id="artLineupAway"></div>
+        <div class="art-pane art-pane-bench" id="artBenchPaneAway"><div class="art-lineup art-bench-track" id="artBenchTrackAway"></div></div>
+      </div>
+    </div>
+    <div class="art-container art-bench" id="artBenchAway" hidden>
+      <div class="art-topbar art-bench-bar"><h2 class="art-bench-title" id="artBenchTitleAway">RESERVAS</h2></div>
+      <div class="art-divider"></div>
+      <div class="art-lineup" id="artBenchListAway"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="js/io-firebase.js?v=1.0.0"></script>
+<script src="js/arte.js"></script>
+</body>
+</html>

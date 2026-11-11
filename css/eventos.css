@@ -1,0 +1,253 @@
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background: transparent;
+}
+
+/* ================= v3.0/v3.2 — PERSONALIZAÇÃO VIA VARIÁVEIS CSS =================
+   Preenchidas dinamicamente por eventos.js a partir de
+   state.customization.eventos. Mudam em tempo real, sem F5 no OBS. */
+:root{
+  --ev-font: 'Montserrat', sans-serif;
+  --ev-text-size: 20px;
+  --ev-bg-rgba: rgba(12,15,20,0.92);
+  --ev-text: #f5f6f8;
+  --ev-goal: #22c55e;
+  --ev-yellow: #eab308;
+  --ev-red: #ef4444;
+  --ev-sub: #0ea5e9;
+  --ev-sub-in: #22c55e;   /* v4.1: ENTRA */
+  --ev-sub-out: #ef4444;  /* v4.1: SAI */
+  --ev-duration-ms: 4500ms;
+  --ev-anim-duration: 500ms;   /* v3.2: duração da animação de entrada/saída */
+  --ev-direction-sign: 1;      /* v3.2: 1 = esquerda→direita, -1 = direita→esquerda */
+}
+
+.eventos-body{
+  display:flex;
+  flex-direction: column;
+  padding: 28px;
+  box-sizing: border-box;
+  font-family: var(--ev-font);
+}
+
+.eventos-stack{
+  display:flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* ---- Posições (definem alinhamento do body inteiro) ---- */
+body.pos-top-left .eventos-stack{ align-items:flex-start; }
+body.pos-top-center .eventos-stack{ align-items:center; }
+body.pos-top-right .eventos-stack{ align-items:flex-end; }
+body.pos-bottom-center{ justify-content:flex-end; }
+body.pos-bottom-center .eventos-stack{ align-items:center; }
+
+.ev-card{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  background: var(--ev-bg-rgba);
+  border-left: 6px solid var(--ev-accent, var(--ev-goal));
+  border-radius: 10px;
+  padding: 14px 22px;
+  box-shadow: 0 18px 40px -16px rgba(0,0,0,0.85);
+  color: var(--ev-text);
+  max-width: 640px;
+  position: relative;
+  overflow: hidden; /* necessário para os estilos sweep/reveal/wipe */
+}
+
+.ev-icon{
+  display:flex;
+  align-items:center;
+  flex-shrink:0;
+}
+.ev-icon svg{
+  display:block;
+  width: calc(var(--ev-text-size) * 1.4);
+  height: calc(var(--ev-text-size) * 1.4);
+}
+
+.ev-texts{
+  display:flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.ev-title{
+  font-weight: 800;
+  font-size: var(--ev-text-size);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  line-height:1.15;
+}
+.ev-subtitle{
+  font-weight: 600;
+  font-size: calc(var(--ev-text-size) * 0.62);
+  opacity: 0.8;
+  letter-spacing: 0.02em;
+}
+/* v4.1 — substituição: duas linhas, ENTRA (verde) e SAI (vermelho) */
+.ev-subs{
+  display:flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 8px;
+}
+.ev-sub-row{
+  display:flex;
+  align-items:center;
+  gap: 9px;
+  font-weight: 800;
+  font-size: calc(var(--ev-text-size) * 0.95);
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+.ev-sub-row svg{ width: 1em; height: 1em; flex-shrink:0; display:block; }
+.ev-sub-row b{
+  font-size: 0.62em;
+  letter-spacing: 0.1em;
+  min-width: 4.2em;
+}
+.ev-sub-row i{
+  font-style: normal;
+  font-size: 0.78em;
+  min-width: 1.9em;
+  text-align:center;
+  padding: 1px 6px;
+  border-radius: 5px;
+  background: rgba(255,255,255,0.14);
+}
+.ev-sub-row.in{ color: var(--ev-sub-in); }
+.ev-sub-row.out{ color: var(--ev-sub-out); }
+.ev-sub-row .ev-sub-name{ color: var(--ev-text); }
+.ev-sub-row.out .ev-sub-name{ opacity: 0.85; }
+
+.ev-minute{
+  font-weight: 700;
+  font-size: calc(var(--ev-text-size) * 0.62);
+  opacity: 0.65;
+  margin-left: auto;
+  padding-left: 12px;
+  flex-shrink:0;
+}
+
+/* ================= ANIMAÇÕES DE ENTRADA/SAÍDA (v3.2) =================
+   A duração total visível é controlada em JS via --ev-duration-ms
+   (setTimeout). A duração da transição em si (entrada/saída) vem de
+   --ev-anim-duration, configurável na aba Arte. */
+
+/* ---- slide: desliza vindo de cima e sai deslizando de volta ---- */
+.ev-card.anim-slide{ animation: evSlideIn var(--ev-anim-duration) cubic-bezier(.2,.9,.25,1.2) both; }
+.ev-card.anim-slide.leaving{ animation: evSlideOut calc(var(--ev-anim-duration) * 0.7) ease both; }
+@keyframes evSlideIn{
+  from{ opacity:0; transform: translateY(-30px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+@keyframes evSlideOut{
+  from{ opacity:1; transform: translateY(0); }
+  to{ opacity:0; transform: translateY(-24px); }
+}
+
+/* ---- fade: só aparece/desaparece suavemente ---- */
+.ev-card.anim-fade{ animation: evFadeIn var(--ev-anim-duration) ease both; }
+.ev-card.anim-fade.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.8) ease both; }
+@keyframes evFadeIn{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes evFadeOut{ from{ opacity:1; } to{ opacity:0; } }
+
+/* ---- bounce: entra com destaque elástico, sai encolhendo ---- */
+.ev-card.anim-bounce{ animation: evBounceIn calc(var(--ev-anim-duration) * 1.1) cubic-bezier(.34,1.56,.64,1) both; }
+.ev-card.anim-bounce.leaving{ animation: evBounceOut calc(var(--ev-anim-duration) * 0.6) ease-in both; }
+@keyframes evBounceIn{
+  0%{ opacity:0; transform: scale(0.4); }
+  70%{ opacity:1; transform: scale(1.08); }
+  100%{ opacity:1; transform: scale(1); }
+}
+@keyframes evBounceOut{
+  from{ opacity:1; transform: scale(1); }
+  to{ opacity:0; transform: scale(0.5); }
+}
+
+/* ---- sweep: uma barra passa pela arte antes do texto aparecer ---- */
+.ev-card.anim-sweep{ animation: evFadeIn calc(var(--ev-anim-duration) * 0.4) ease both; }
+.ev-card.anim-sweep.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.6) ease both; }
+.ev-card.anim-sweep::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent);
+  transform: translateX(calc(-120% * var(--ev-direction-sign)));
+  animation: evSweepBar var(--ev-anim-duration) ease-out both;
+  pointer-events:none;
+}
+@keyframes evSweepBar{
+  from{ transform: translateX(calc(-120% * var(--ev-direction-sign))); }
+  to{ transform: translateX(calc(120% * var(--ev-direction-sign))); }
+}
+
+/* ---- stagger: ícone / texto / minuto entram em sequência ---- */
+.ev-card.anim-stagger{ animation: evFadeIn 100ms ease both; }
+.ev-card.anim-stagger.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.6) ease both; }
+.ev-card.anim-stagger .ev-icon,
+.ev-card.anim-stagger .ev-texts,
+.ev-card.anim-stagger .ev-minute{
+  opacity:0;
+  animation: evStaggerIn var(--ev-anim-duration) ease both;
+}
+@keyframes evStaggerIn{
+  from{ opacity:0; transform: translateX(calc(-14px * var(--ev-direction-sign))); }
+  to{ opacity:1; transform: translateX(0); }
+}
+
+/* ---- reveal: uma máscara revela o texto progressivamente ---- */
+.ev-card.anim-reveal{ animation: evFadeIn 80ms ease both; }
+.ev-card.anim-reveal.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.6) ease both; }
+.ev-card.anim-reveal::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--ev-bg-rgba);
+  animation: evRevealMask var(--ev-anim-duration) ease-in-out both;
+  pointer-events:none;
+}
+@keyframes evRevealMask{
+  from{ transform: scaleX(1); }
+  to{ transform: scaleX(0); }
+}
+.ev-card.anim-reveal::after{ transform-origin: right center; }
+body.pos-top-left .ev-card.anim-reveal::after,
+body.pos-bottom-center .ev-card.anim-reveal::after{ transform-origin: left center; }
+
+/* ---- pulse: entra e faz um pequeno pulso ---- */
+.ev-card.anim-pulse{ animation: evPulseIn var(--ev-anim-duration) ease both; }
+.ev-card.anim-pulse.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.6) ease both; }
+@keyframes evPulseIn{
+  0%{ opacity:0; transform: scale(0.9); }
+  60%{ opacity:1; transform: scale(1.04); }
+  80%{ transform: scale(0.98); }
+  100%{ transform: scale(1); }
+}
+
+/* ---- wipe: cor varre da esquerda (ou direita) antes do conteúdo ---- */
+.ev-card.anim-wipe{ animation: evFadeIn 60ms ease both; }
+.ev-card.anim-wipe.leaving{ animation: evFadeOut calc(var(--ev-anim-duration) * 0.6) ease both; }
+.ev-card.anim-wipe::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: var(--ev-accent, var(--ev-goal));
+  transform-origin: left center;
+  animation: evWipeBar var(--ev-anim-duration) ease-in-out both;
+  pointer-events:none;
+}
+body.pos-top-left .ev-card.anim-wipe::before,
+body.pos-bottom-center .ev-card.anim-wipe::before{ transform-origin: right center; }
+@keyframes evWipeBar{
+  from{ transform: scaleX(1); }
+  to{ transform: scaleX(0); }
+}

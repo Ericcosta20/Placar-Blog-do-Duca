@@ -1,0 +1,61 @@
+/* v6.1 — ESTILOS DE ENTRADA E SAÍDA dos cartões inteiros (fim de jogo e pênaltis).
+   Uso: o JS põe a classe  ax-in-<estilo>  ao ligar e  ax-out-<estilo>  ao desligar.
+   Nada aqui roda sozinho: sem a classe, o cartão só aparece/some. */
+@keyframes axIn-classic { from { opacity: 0; transform: translateY(40px) scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes axOut-classic { to { opacity: 0; transform: translateY(30px) scale(.97); } }
+@keyframes axIn-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes axOut-fade { to { opacity: 0; } }
+@keyframes axIn-slide { from { opacity: 0; transform: translateX(-140px); } to { opacity: 1; transform: none; } }
+@keyframes axOut-slide { to { opacity: 0; transform: translateX(-140px); } }
+@keyframes axIn-slide-right { from { opacity: 0; transform: translateX(140px); } to { opacity: 1; transform: none; } }
+@keyframes axOut-slide-right { to { opacity: 0; transform: translateX(140px); } }
+@keyframes axIn-rise { from { opacity: 0; transform: translateY(90px); } to { opacity: 1; transform: none; } }
+@keyframes axOut-rise { to { opacity: 0; transform: translateY(90px); } }
+@keyframes axIn-drop { from { opacity: 0; transform: translateY(-90px); } to { opacity: 1; transform: none; } }
+@keyframes axOut-drop { to { opacity: 0; transform: translateY(-90px); } }
+@keyframes axIn-zoom { from { opacity: 0; transform: scale(.55); } to { opacity: 1; transform: none; } }
+@keyframes axOut-zoom { to { opacity: 0; transform: scale(.55); } }
+@keyframes axIn-pop { from { opacity: 0; transform: scale(1.5); } 70% { opacity: 1; transform: scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes axOut-pop { 30% { transform: scale(1.06); opacity: 1; } to { opacity: 0; transform: scale(1.5); } }
+@keyframes axIn-flip { from { opacity: 0; transform: perspective(900px) rotateX(-85deg); } to { opacity: 1; transform: perspective(900px) rotateX(0); } }
+@keyframes axOut-flip { from { transform: perspective(900px) rotateX(0); } to { opacity: 0; transform: perspective(900px) rotateX(85deg); } }
+@keyframes axIn-spin { from { opacity: 0; transform: perspective(900px) rotateY(-80deg); } to { opacity: 1; transform: perspective(900px) rotateY(0); } }
+@keyframes axOut-spin { from { transform: perspective(900px) rotateY(0); } to { opacity: 0; transform: perspective(900px) rotateY(80deg); } }
+@keyframes axIn-blur { from { opacity: 0; filter: blur(18px); transform: scale(1.06); } to { opacity: 1; filter: blur(0); transform: none; } }
+@keyframes axOut-blur { to { opacity: 0; filter: blur(18px); transform: scale(1.06); } }
+@keyframes axIn-wipe { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes axOut-wipe { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(0 0 0 100%); } }
+@keyframes axIn-wipe-down { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes axOut-wipe-down { from { clip-path: inset(0 0 0 0); } to { clip-path: inset(100% 0 0 0); } }
+@keyframes axIn-bounce {
+  0% { opacity: 0; transform: translateY(-160px); } 45% { opacity: 1; transform: translateY(0); } 62% { transform: translateY(-34px); }
+  78% { transform: translateY(0); } 89% { transform: translateY(-12px); } 100% { transform: translateY(0); }
+}
+
+.ax-in-classic { animation: axIn-classic .55s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-classic { animation: axOut-classic .45s ease-in both; }
+.ax-in-fade { animation: axIn-fade .55s ease both; }
+.ax-out-fade { animation: axOut-fade .45s ease both; }
+.ax-in-slide { animation: axIn-slide .6s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-slide { animation: axOut-slide .5s cubic-bezier(.5,0,.8,.4) both; }
+.ax-in-slide-right { animation: axIn-slide-right .6s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-slide-right { animation: axOut-slide-right .5s cubic-bezier(.5,0,.8,.4) both; }
+.ax-in-rise { animation: axIn-rise .6s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-rise { animation: axOut-rise .5s ease-in both; }
+.ax-in-drop { animation: axIn-drop .6s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-drop { animation: axOut-drop .5s ease-in both; }
+.ax-in-zoom { animation: axIn-zoom .55s cubic-bezier(.2,.9,.3,1.1) both; }
+.ax-out-zoom { animation: axOut-zoom .45s ease-in both; }
+.ax-in-pop { animation: axIn-pop .6s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-pop { animation: axOut-pop .5s ease-in both; }
+.ax-in-flip { animation: axIn-flip .7s cubic-bezier(.2,.9,.3,1) both; transform-origin: 50% 0; }
+.ax-out-flip { animation: axOut-flip .6s ease-in both; transform-origin: 50% 0; }
+.ax-in-spin { animation: axIn-spin .7s cubic-bezier(.2,.9,.3,1) both; }
+.ax-out-spin { animation: axOut-spin .6s ease-in both; }
+.ax-in-blur { animation: axIn-blur .7s ease both; }
+.ax-out-blur { animation: axOut-blur .6s ease both; }
+.ax-in-wipe { animation: axIn-wipe .7s cubic-bezier(.6,0,.2,1) both; }
+.ax-out-wipe { animation: axOut-wipe .6s cubic-bezier(.6,0,.2,1) both; }
+.ax-in-wipe-down { animation: axIn-wipe-down .7s cubic-bezier(.6,0,.2,1) both; }
+.ax-out-wipe-down { animation: axOut-wipe-down .6s cubic-bezier(.6,0,.2,1) both; }
+.ax-in-bounce { animation: axIn-bounce .95s cubic-bezier(.3,.7,.4,1) both; }

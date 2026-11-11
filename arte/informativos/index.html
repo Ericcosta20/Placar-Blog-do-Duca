@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base href="../../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte — Informativos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/anim-styles.css">
+<link rel="stylesheet" href="css/informativos.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body class="inf-body no-anim">
+
+<!-- v6.0 — Informativos: cada cartão aparece sozinho quando você liga o botão correspondente no painel
+     (Classificação, Partida → Outros jogos, Partida → Arbitragem). Nada aparece ao abrir ou atualizar a página. -->
+<div class="inf-layer" id="layerStandings"><div class="st-card" id="stCard"></div></div>
+<div class="inf-layer" id="layerOthers"><div class="ot-card" id="otCard"></div></div>
+<div class="inf-layer" id="layerRef"><div class="of-card" id="rfCard"></div></div>
+<div class="inf-layer" id="layerVar"><div class="of-card" id="vrCard"></div></div>
+<div class="inf-layer" id="layerStadium"><div class="sd-card" id="sdCard"></div></div>
+
+<script src="js/io-firebase.js?v=1.0.0"></script>
+<script src="js/standings-core.js"></script>
+<script src="js/informativos.js"></script>
+</body>
+</html>

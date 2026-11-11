@@ -1,0 +1,430 @@
+:root{
+  --team-primary: #0057ff;
+  --team-secondary: #ffffff;
+  --text-color: #f5f6f8;
+  --number-color: #ffffff;
+  --bg-color: #0c0f14;
+  --divider-color: #ffffff;
+  --captain-color: #ffd700;
+  --shadow-color: #000000;
+
+  --font-family: 'Montserrat', sans-serif;
+  --name-size: 16px;
+  --number-size: 16px;
+  --team-name-size: 24px;
+
+  --line-spacing: 4px;
+  --row-height: 40px;
+  --inner-padding: 20px;
+  --border-radius: 14px;
+
+  --art-width: 560px;
+  --margin-top: 40px;
+  --margin-left: 40px;
+
+  --crest-size: 44px;
+  --crest-gap: 14px;
+  --topbar-thickness: 62px;
+  --divider-thickness: 3px;
+
+  --bg-alpha: 1;
+  --divider-alpha: 0.85;
+}
+
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background: transparent;
+}
+
+body.art-body{
+  display:flex;
+  align-items:flex-start;
+  justify-content:flex-start;
+  font-family: var(--font-family);
+}
+
+.art-wrapper{
+  display:flex;
+  align-items:flex-start;
+  gap: 32px;
+  margin: var(--margin-top) 0 0 var(--margin-left);
+}
+
+.art-side{
+  display:flex;
+  flex-direction:column;
+  gap: 12px;
+  align-items:stretch;
+}
+.art-side[hidden], .art-wrapper[hidden]{ display:none; }
+
+.art-container{
+  width: var(--art-width);
+  border-radius: var(--border-radius);
+  overflow:hidden;
+  background: var(--bg-color);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.art-container[hidden]{ display:none; }
+.art-container.effect-shadow{
+  box-shadow: 0 20px 50px -20px var(--shadow-color);
+}
+.art-container.effect-outline{
+  border: 2px solid var(--team-secondary);
+}
+.art-container.effect-glow{
+  box-shadow: 0 0 32px 4px color-mix(in srgb, var(--team-primary) 60%, transparent);
+}
+.art-container.effect-translucent{
+  background: color-mix(in srgb, var(--bg-color) var(--bg-opacity-pct, 100%), transparent);
+  backdrop-filter: blur(6px);
+}
+
+.art-topbar{
+  display:flex;
+  align-items:center;
+  gap: var(--crest-gap);
+  padding: 0 var(--inner-padding);
+  min-height: var(--topbar-thickness);
+  background: var(--team-primary);
+}
+.art-topbar.effect-gradient{
+  background: linear-gradient(90deg, var(--team-primary), color-mix(in srgb, var(--team-primary) 55%, black));
+}
+
+.art-crest{
+  width: var(--crest-size);
+  height: var(--crest-size);
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+  flex-shrink: 0;
+}
+
+.art-team-name{
+  margin:0;
+  color: var(--team-secondary);
+  font-size: var(--team-name-size);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.art-divider{
+  height: var(--divider-thickness);
+  background: var(--divider-color);
+  opacity: var(--divider-alpha);
+}
+
+.art-lineup{
+  display:flex;
+  flex-direction: column;
+  gap: var(--line-spacing);
+  padding: var(--line-spacing) 0;
+}
+
+.art-player-row{
+  display:flex;
+  align-items:center;
+  gap: 14px;
+  padding: 0 var(--inner-padding);
+  min-height: var(--row-height);
+  background: rgba(255,255,255,0.015);
+  position: relative; /* v3.2: necessário para o sweep do flash/substituição */
+  overflow: hidden;
+}
+.art-player-row.has-separators{
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.art-player-row:nth-child(even){
+  background: rgba(255,255,255,0.035);
+}
+
+.art-player-row .art-number{
+  min-width: 32px;
+  text-align:center;
+  font-weight: 700;
+  font-size: var(--number-size);
+  color: var(--number-color);
+  background: var(--team-primary);
+  border-radius: 6px;
+  padding: 3px 6px;
+  flex-shrink:0;
+  font-family: var(--font-family);
+}
+
+.art-player-row .art-name{
+  flex:1;
+  font-size: var(--name-size);
+  font-weight: 500;
+  color: var(--text-color);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  font-family: var(--font-family);
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+}
+
+.art-player-row .art-captain{
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--bg-color);
+  background: var(--captain-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* v3.2 — ícones de evento (gol/amarelo/vermelho) à direita do nome.
+   Contêiner próprio: nunca altera o alinhamento do nome/número. */
+.art-event-icons{
+  display:flex;
+  align-items:center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.art-event-icons .ev-icon-svg{ display:block; }
+/* v5.0 — tamanho das marcações ajustável (slider "Tamanho das marcações" na aba Arte) */
+.art-event-icons{ gap: calc(4px * var(--marker-scale, 1)); }
+.ev-icon-svg.m-goal{ width: calc(13px * var(--marker-scale, 1)); height: calc(13px * var(--marker-scale, 1)); }
+.ev-icon-svg.m-card{ width: calc(10px * var(--marker-scale, 1)); height: calc(14px * var(--marker-scale, 1)); }
+
+.art-empty-msg{
+  padding: 20px;
+  text-align:center;
+  color: #8a92a1;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+}
+
+/* =========================================================
+   v5.0 — RESERVAS (banco): painel do MESMO tamanho dos titulares
+========================================================= */
+.art-bench-bar{
+  min-height: calc(var(--topbar-thickness) * 0.62);
+}
+.art-bench-title{
+  margin:0;
+  color: var(--team-secondary);
+  font-size: calc(var(--team-name-size) * 0.72);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.art-player-row.is-out{ opacity: 0.55; filter: grayscale(0.85); }
+.art-out-tag{ display:flex; align-items:center; flex-shrink:0; color:#ef4444; }
+.art-out-tag .out-arrow{ width: 14px; height: 14px; display:block; }
+
+/* =========================================================
+   v5.0 — JOGADOR EXPULSO: a linha fica escura
+========================================================= */
+.art-player-row.is-sent-off,
+.art-player-row.is-sent-off:nth-child(even){
+  background: rgba(0,0,0,0.72);
+  box-shadow: inset 0 0 0 1px rgba(239,68,68,0.22);
+}
+.art-player-row.is-sent-off .art-number,
+.art-player-row.is-sent-off .art-name,
+.art-player-row.is-sent-off .art-captain{
+  opacity: 0.42;
+  filter: grayscale(0.8);
+}
+@keyframes sentOffDarken{
+  0%   { background-color: rgba(239,68,68,0.55); }
+  100% { background-color: rgba(0,0,0,0.72); }
+}
+.art-player-row.just-sent-off{ animation: sentOffDarken 1.4s ease-out var(--so-off, 0ms) both; }
+
+/* =========================================================
+   FLASH DE GOL/CARTÃO (v3.2): fundo pulsa na cor do time e uma barra
+   luminosa cruza a linha, sem mover o conteúdo.
+========================================================= */
+@keyframes rowSweep {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes eventFlashBg {
+  0%   { background-color: rgba(255,255,255,0); }
+  25%  { background-color: color-mix(in srgb, var(--team-primary) 55%, transparent); }
+  100% { background-color: rgba(255,255,255,0); }
+}
+.art-player-row.event-flash{
+  animation: eventFlashBg 0.9s ease-out var(--flash-off, 0ms) both;
+}
+.art-player-row.event-flash::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+  animation: rowSweep 0.7s ease-out var(--flash-off, 0ms) both;
+  pointer-events: none;
+}
+
+/* =========================================================
+   v5.0 — NOME DE QUEM FEZ O GOL PISCA (≈3,6 s)
+========================================================= */
+@keyframes nameBlink{
+  0%, 100% { color: var(--text-color); text-shadow: none; transform: scale(1); }
+  8%, 30%, 52%, 74% { color: #ffe14d; text-shadow: 0 0 14px rgba(255,225,77,0.95), 0 0 3px rgba(255,225,77,0.9); transform: scale(1.06); }
+  19%, 41%, 63%, 85% { color: var(--text-color); text-shadow: none; transform: scale(1); }
+}
+.art-player-row .art-name.name-blink{
+  transform-origin: left center;
+  animation: nameBlink 3.6s ease-in-out var(--blink-off, 0ms) both;
+}
+
+/* =========================================================
+   v5.0 — SUBSTITUIÇÃO (longa e bem visível)
+   Sobre a linha de quem ENTROU passa uma faixa: primeiro vermelha com
+   "SAI 07 NOME", depois verde com "ENTRA 15 NOME". No final a faixa sai
+   e a linha fica brilhando em verde. Duração = --sub-d (padrão 5 s).
+========================================================= */
+.art-player-row.sub-enter{
+  z-index: 2;
+  animation: subRowGlow var(--sub-d, 5000ms) ease-out var(--sub-off, 0ms) both;
+}
+@keyframes subRowGlow{
+  0%   { box-shadow: inset 0 0 0 0 rgba(34,197,94,0); }
+  50%  { box-shadow: inset 0 0 0 3px rgba(34,197,94,0.9), 0 0 22px rgba(34,197,94,0.55); }
+  100% { box-shadow: inset 0 0 0 0 rgba(34,197,94,0); }
+}
+.sub-overlay{
+  position:absolute;
+  inset:0;
+  z-index: 3;
+  overflow:hidden;
+  pointer-events:none;
+  animation: subOverlay var(--sub-d, 5000ms) cubic-bezier(.3,.7,.2,1) var(--sub-off, 0ms) both;
+}
+@keyframes subOverlay{
+  0%   { clip-path: inset(0 100% 0 0); }
+  7%   { clip-path: inset(0 0 0 0); }
+  86%  { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 0 100%); }
+}
+.sub-layer{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  gap: 12px;
+  padding: 0 var(--inner-padding);
+  color:#fff;
+  font-family: var(--font-family);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.sub-layer .sub-arrow{ width: calc(var(--name-size) * 1.2); height: calc(var(--name-size) * 1.2); flex-shrink:0; }
+.sub-layer b{ font-size: calc(var(--name-size) * 0.95); font-weight: 800; letter-spacing: 0.14em; min-width: 5.2em; }
+.sub-layer i{
+  font-style: normal; font-weight: 800; font-size: var(--number-size);
+  background: rgba(255,255,255,0.22); border-radius: 6px; padding: 3px 8px; min-width: 2.2em; text-align:center;
+}
+.sub-layer span{ font-size: var(--name-size); font-weight: 700; letter-spacing: 0.03em; overflow:hidden; text-overflow: ellipsis; }
+.sub-out{
+  background: linear-gradient(90deg, #b91c1c, #ef4444);
+  animation: subOutLayer var(--sub-d, 5000ms) ease-in-out var(--sub-off, 0ms) both;
+}
+.sub-in{
+  background: linear-gradient(90deg, #15803d, #22c55e);
+  animation: subInLayer var(--sub-d, 5000ms) ease-in-out var(--sub-off, 0ms) both;
+}
+@keyframes subOutLayer{
+  0%, 38%  { transform: translateY(0); }
+  46%, 100% { transform: translateY(-100%); }
+}
+@keyframes subInLayer{
+  0%, 38%  { transform: translateY(100%); }
+  46%, 100% { transform: translateY(0); }
+}
+
+/* =========================================================
+   v5.0 — ENTRADA / SAÍDA ANIMADA DO MÓDULO
+   Só roda quando o módulo é LIGADO/DESLIGADO (ou no botão "Repetir
+   animação"), nunca ao abrir ou recarregar a Browser Source.
+========================================================= */
+@keyframes introSlideL{ from{ opacity:0; transform: translateX(-70px); } to{ opacity:1; transform:none; } }
+@keyframes introFade{ from{ opacity:0; } to{ opacity:1; } }
+@keyframes introRow{ from{ opacity:0; transform: translateX(-34px); } to{ opacity:1; transform:none; } }
+@keyframes introBar{ from{ transform: scaleX(0); } to{ transform: scaleX(1); } }
+@keyframes outroSlideL{ to{ opacity:0; transform: translateX(-70px); } }
+@keyframes outroFade{ to{ opacity:0; } }
+
+/* cascata: o cabeçalho abre e cada linha entra em sequência */
+.art-wrapper.intro[data-intro="cascade"] .art-topbar{ transform-origin: left center; animation: introBar .45s cubic-bezier(.2,.8,.2,1) both; }
+.art-wrapper.intro[data-intro="cascade"] .art-side:nth-child(2) .art-topbar{ animation-delay: .12s; }
+.art-wrapper.intro[data-intro="cascade"] .art-team-name,
+.art-wrapper.intro[data-intro="cascade"] .art-crest{ animation: introFade .4s ease .3s both; }
+.art-wrapper.intro[data-intro="cascade"] .art-player-row{ animation: introRow .5s cubic-bezier(.2,.9,.3,1) calc(300ms + var(--i, 0) * 70ms) both; }
+.art-wrapper.intro[data-intro="cascade"] .art-container{ animation: introFade .3s ease both; }
+
+.art-wrapper.intro[data-intro="slide"] .art-side:nth-child(1){ animation: introSlideL .6s cubic-bezier(.2,.8,.2,1) both; }
+.art-wrapper.intro[data-intro="slide"] .art-side:nth-child(2){ animation: introSlideL .6s cubic-bezier(.2,.8,.2,1) .15s both; }
+.art-wrapper.intro[data-intro="fade"] .art-side{ animation: introFade .8s ease both; }
+
+.art-wrapper.outro[data-intro="cascade"] .art-side,
+.art-wrapper.outro[data-intro="slide"] .art-side{ animation: outroSlideL .5s cubic-bezier(.5,0,.8,.4) both; }
+.art-wrapper.outro[data-intro="cascade"] .art-side:nth-child(2),
+.art-wrapper.outro[data-intro="slide"] .art-side:nth-child(2){ animation-delay: .1s; }
+.art-wrapper.outro[data-intro="fade"] .art-side{ animation: outroFade .5s ease both; }
+
+/* =========================================================
+   v5.1 — RESERVAS NO LUGAR DOS TITULARES (palco com dois painéis)
+========================================================= */
+.art-topbar{ position: relative; }
+.art-stage{ position: relative; overflow: hidden; }
+.art-pane{ transition: transform .75s cubic-bezier(.65,0,.25,1), opacity .55s ease; will-change: transform; }
+/* titulares ficam no fluxo (definem a altura do palco); reservas ficam por cima, fora da tela à direita */
+.art-pane-bench{
+  position: absolute; inset: 0;
+  overflow: hidden;
+  transform: translateX(105%); opacity: 0;
+  pointer-events: none;
+}
+.art-bench-track{ position: relative; will-change: transform, opacity; }
+.art-container.show-bench .art-pane-starters{ transform: translateX(-105%); opacity: 0; }
+.art-container.show-bench .art-pane-bench{ transform: translateX(0); opacity: 1; }
+.art-container.no-anim .art-pane, .art-container.no-anim .art-bench-tag{ transition: none !important; }
+
+/* etiqueta "RESERVAS" no canto da barra do time enquanto a lista de reservas está no ar */
+.art-bench-tag{
+  position: absolute;
+  right: var(--inner-padding);
+  top: 50%;
+  transform: translate(14px, -50%);
+  opacity: 0;
+  pointer-events: none;
+  padding: 4px 11px 4px 13px;
+  border-radius: 999px;
+  background: var(--team-secondary);
+  color: var(--team-primary);
+  font-size: calc(var(--team-name-size) * 0.5);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: opacity .5s ease .25s, transform .6s cubic-bezier(.2,.9,.3,1) .25s;
+}
+.art-container.show-bench .art-bench-tag{ opacity: 1; transform: translate(0, -50%); }
+/* nome do time cede espaço para a etiqueta */
+.art-container.show-bench .art-team-name{ max-width: calc(100% - var(--crest-size) - var(--crest-gap) - 9.2em); }
+
+/* ícone de substituição (quem entrou) junto das marcações — usa o mesmo controle de tamanho */
+.art-event-icons .sub-marker{ display:flex; align-items:center; gap: calc(3px * var(--marker-scale, 1)); }
+.ev-icon-svg.m-sub{ width: calc(17px * var(--marker-scale, 1)); height: calc(17px * var(--marker-scale, 1)); }
+.sub-from{
+  display:flex; align-items:center; gap: 1px;
+  color:#ef4444; font-weight:800;
+  font-size: calc(13px * var(--marker-scale, 1));
+  font-variant-numeric: tabular-nums;
+  line-height:1;
+}
+.sub-from .out-arrow{ width: calc(9px * var(--marker-scale, 1)); height: calc(9px * var(--marker-scale, 1)); }

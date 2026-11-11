@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base href="../../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte — Fim de jogo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/anim-styles.css">
+<link rel="stylesheet" href="css/fim-de-jogo.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body class="fim-body">
+
+<!-- v5.0 — cartão de FIM DE JOGO: placar final + quem fez os gols.
+     Só aparece quando "Mostrar no OBS" está ligado na aba Partida do painel. -->
+<div class="fim-card" id="fimCard" hidden>
+  <div class="fim-title" id="fimTitle">FIM DE JOGO</div>
+  <div class="fim-comp" id="fimComp"></div>
+  <div class="fim-main">
+    <div class="fim-team fim-home" id="fimHome">
+      <img class="fim-crest" id="fimCrestHome" alt="" style="display:none;">
+      <span class="fim-name" id="fimNameHome">MANDANTE</span>
+    </div>
+    <div class="fim-score" id="fimScore"><span id="fimNumHome">0</span><i>×</i><span id="fimNumAway">0</span></div>
+    <div class="fim-team fim-away" id="fimAway">
+      <span class="fim-name" id="fimNameAway">VISITANTE</span>
+      <img class="fim-crest" id="fimCrestAway" alt="" style="display:none;">
+    </div>
+  </div>
+  <div class="fim-pen" id="fimPen" hidden></div>
+  <div class="fim-scorers" id="fimScorers">
+    <ul class="fim-list fim-list-home" id="fimListHome"></ul>
+    <ul class="fim-list fim-list-away" id="fimListAway"></ul>
+  </div>
+</div>
+
+<script src="js/io-firebase.js?v=1.0.0"></script>
+<script src="js/fim-de-jogo.js"></script>
+</body>
+</html>

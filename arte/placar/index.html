@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base href="../../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte — Placar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/placar.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body class="placar-body">
+
+<!-- v5.0: tudo dentro de #sbRoot — é nele que entram as animações de entrada/saída -->
+<div class="sb-root" id="sbRoot">
+
+<div class="sb-competition" id="sbCompetition" hidden></div>
+
+<!-- v3.2: período atual da partida (1º TEMPO, 2º TEMPO, PRORROGAÇÃO...) -->
+<div class="sb-period" id="sbPeriod" hidden></div>
+
+<div class="scoreboard" id="scoreboard">
+  <div class="sb-team sb-home" id="sbTeamHome">
+    <img class="sb-crest" id="sbCrestHome" src="" alt="" style="display:none;">
+    <span class="sb-name" id="sbNameHome"><span class="sb-name-text">MANDANTE</span></span>
+    <!-- v4.1: aviso "GOL!" que cobre o nome do time que marcou -->
+    <div class="sb-goal sb-goal-home" id="sbGoalHome" aria-hidden="true"><span class="sb-goal-text"></span><span class="sb-goal-scorer"></span></div>
+    <!-- v5.0: aviso de substituição (números de quem entra e de quem sai) -->
+    <div class="sb-sub sb-sub-home" id="sbSubHome" aria-hidden="true">
+      <div class="sb-sub-row sb-sub-in"><svg viewBox="0 0 24 24"><path d="M12 3l8 9h-5v9H9v-9H4z" fill="currentColor"/></svg><i class="sb-sub-num"></i><span class="sb-sub-name"></span></div>
+      <div class="sb-sub-row sb-sub-out"><svg viewBox="0 0 24 24"><path d="M12 21l-8-9h5V3h6v9h5z" fill="currentColor"/></svg><i class="sb-sub-num"></i><span class="sb-sub-name"></span></div>
+    </div>
+    <!-- v5.0: cartões do time (amarelos e vermelhos acumulam) -->
+    <div class="sb-cards sb-cards-home" id="sbCardsHome"></div>
+  </div>
+
+  <div class="sb-center" id="sbCenter">
+    <!-- v4.1: números separados (estilo Broadcast) e resultado dos pênaltis (4) 1 × 1 (3) -->
+    <div class="sb-score" id="sbScore">
+      <span class="sb-pen sb-pen-home" id="sbPenHome" hidden></span>
+      <span class="sb-num" id="sbNumHome">0</span>
+      <span class="sb-dash">×</span>
+      <span class="sb-num" id="sbNumAway">0</span>
+      <span class="sb-pen sb-pen-away" id="sbPenAway" hidden></span>
+    </div>
+    <div class="sb-clockrow">
+      <div class="sb-clock" id="sbClock" hidden>00:00</div>
+      <!-- v3.1: acréscimo informado pelo operador, exibido de forma discreta ao lado do relógio.
+           NÃO substitui o relógio contínuo. Exibe "+N" em destaque menor. -->
+      <div class="sb-added-time" id="sbAddedTime" hidden></div>
+    </div>
+  </div>
+
+  <div class="sb-team sb-away" id="sbTeamAway">
+    <span class="sb-name" id="sbNameAway"><span class="sb-name-text">VISITANTE</span></span>
+    <img class="sb-crest" id="sbCrestAway" src="" alt="" style="display:none;">
+    <div class="sb-goal sb-goal-away" id="sbGoalAway" aria-hidden="true"><span class="sb-goal-text"></span><span class="sb-goal-scorer"></span></div>
+    <!-- v5.0: aviso de substituição (números de quem entra e de quem sai) -->
+    <div class="sb-sub sb-sub-away" id="sbSubAway" aria-hidden="true">
+      <div class="sb-sub-row sb-sub-in"><svg viewBox="0 0 24 24"><path d="M12 3l8 9h-5v9H9v-9H4z" fill="currentColor"/></svg><i class="sb-sub-num"></i><span class="sb-sub-name"></span></div>
+      <div class="sb-sub-row sb-sub-out"><svg viewBox="0 0 24 24"><path d="M12 21l-8-9h5V3h6v9h5z" fill="currentColor"/></svg><i class="sb-sub-num"></i><span class="sb-sub-name"></span></div>
+    </div>
+    <div class="sb-cards sb-cards-away" id="sbCardsAway"></div>
+  </div>
+</div>
+
+<!-- v6.0: contador de substituições — 5 marcadores por time, preenchidos a cada substituição -->
+<div class="sb-subcounts" id="sbSubCounts" aria-hidden="true">
+  <div class="sb-subcount sb-subcount-home" id="sbSubCountHome"></div>
+  <div class="sb-subcount sb-subcount-away" id="sbSubCountAway"></div>
+</div>
+
+</div><!-- /sbRoot -->
+
+<script src="js/io-firebase.js?v=1.0.0"></script>
+<script src="js/placar.js"></script>
+</body>
+</html>

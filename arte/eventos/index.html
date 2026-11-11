@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<base href="../../">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arte — Eventos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/eventos.css">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body class="eventos-body">
+
+<!-- v3.0 — não é uma lista: cada evento novo aparece aqui como uma
+     notificação animada e some sozinha depois de X milissegundos
+     (configurável na aba Arte -> Personalização dos Eventos). -->
+<div class="eventos-stack" id="eventosStack"></div>
+
+<script src="js/io-firebase.js?v=1.0.0"></script>
+<script src="js/eventos.js"></script>
+</body>
+</html>

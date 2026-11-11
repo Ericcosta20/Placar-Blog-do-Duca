@@ -1,0 +1,102 @@
+html, body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background: transparent;
+}
+
+/* v3.2 — Personalização via variáveis CSS, preenchidas por linha-do-tempo.js
+   a partir de state.customization.linhaDoTempo. Atualiza em tempo real. */
+:root{
+  --lt-font-size: 14px;
+  --lt-icon-size: 14px;
+  --lt-spacing: 6px;
+  --lt-row-height: 28px;
+  --lt-bg-rgba: rgba(12,15,20,0.8);
+  --lt-text: #f5f6f8;
+}
+
+.lt-body{
+  display:flex;
+  flex-direction: column;
+  padding: 18px;
+  box-sizing: border-box;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Posições — alinham o contêiner da lista no canto escolhido */
+body.lt-pos-top-left{ align-items:flex-start; justify-content:flex-start; }
+body.lt-pos-top-right{ align-items:flex-end; justify-content:flex-start; }
+body.lt-pos-bottom-left{ align-items:flex-start; justify-content:flex-end; }
+body.lt-pos-bottom-right{ align-items:flex-end; justify-content:flex-end; }
+
+.lt-list{
+  display:flex;
+  flex-direction: column;
+  gap: var(--lt-spacing);
+}
+/* bottom-* empilha de baixo para cima visualmente (evento mais novo embaixo) */
+body.lt-pos-bottom-left .lt-list,
+body.lt-pos-bottom-right .lt-list{ flex-direction: column-reverse; }
+
+.lt-row{
+  display:flex;
+  align-items:center;
+  gap: 8px;
+  min-height: var(--lt-row-height);
+  padding: 0 12px;
+  background: var(--lt-bg-rgba);
+  border-radius: 6px;
+  color: var(--lt-text);
+  font-size: var(--lt-font-size);
+  font-weight: 600;
+  white-space: nowrap;
+  animation: ltRowIn .3s ease both;
+}
+@keyframes ltRowIn{
+  from{ opacity:0; transform: translateY(-6px); }
+  to{ opacity:1; transform: translateY(0); }
+}
+
+.lt-minute{
+  color: #9aa4b5;
+  font-weight: 700;
+  min-width: 44px;
+  font-variant-numeric: tabular-nums;
+}
+.lt-icon{ display:flex; align-items:center; flex-shrink:0; }
+.lt-icon svg{ display:block; width: var(--lt-icon-size); height: var(--lt-icon-size); }
+.lt-player{ flex:1; overflow:hidden; text-overflow: ellipsis; }
+.lt-team{
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.12);
+  flex-shrink: 0;
+}
+
+/* v4.1 — substituição: ▲ entra (verde) · ▼ sai (vermelho); gol de pênalti / gol contra */
+.lt-in, .lt-out{ display:inline-flex; align-items:center; gap: 4px; }
+.lt-out{ margin-left: 10px; opacity: 0.85; }
+.lt-arrow{ width: calc(var(--lt-font-size) * 0.85); height: calc(var(--lt-font-size) * 0.85); flex-shrink:0; }
+.lt-arrow.in{ color: #22c55e; }
+.lt-arrow.out{ color: #ef4444; }
+.lt-tag{
+  font-size: 0.68em;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  padding: 1px 5px;
+  margin-left: 4px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.16);
+  vertical-align: middle;
+}
+
+/* v5.0 — gol anulado */
+.lt-row.lt-annulled{ opacity: .6; }
+.lt-row.lt-annulled s{ text-decoration-thickness: 2px; text-decoration-color: #ef4444; }
+.lt-tag-annul{ background:#ef4444; color:#fff; }
