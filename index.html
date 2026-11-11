@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Controle — Transmissão v5.2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="css/panel/base.css?v=1.0.0">
+<link rel="stylesheet" href="css/panel/layout.css?v=1.0.0">
+<link rel="stylesheet" href="css/panel/components.css?v=1.0.0">
+<link rel="stylesheet" href="css/panel/pages.css?v=1.0.0">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+</head>
+<body>
+
+<!-- ============ ÍCONES (SVG próprios — não dependem de emoji do sistema) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-dashboard" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></symbol>
+    <symbol id="i-teams" viewBox="0 0 24 24"><path d="M12 3l7.5 2.6V11c0 4.6-3 8-7.5 10-4.5-2-7.5-5.4-7.5-10V5.6z"/><path d="M9 11.5l2.2 2.2L15.5 9"/></symbol>
+    <symbol id="i-lineup" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5"/><circle cx="17.5" cy="9" r="2.4"/><path d="M17 14.6c2.4.2 4.2 1.9 4.2 4.4"/></symbol>
+    <symbol id="i-match" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4.2l2.8 1.8M9.5 3h5"/></symbol>
+    <symbol id="i-art" viewBox="0 0 24 24"><path d="M4 7h9M17 7h3M4 17h3M11 17h9M4 12h16"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/><circle cx="8" cy="12" r="2"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7.5" ry="3"/><path d="M4.5 5.5v6.5c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V5.5M4.5 12v6.5c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3V12"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.3 9.4a2.8 2.8 0 015.3 1.2c0 1.8-2.6 2.2-2.6 4M12 17.6h.01"/></symbol>
+    <symbol id="i-goal" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2l3.7 2.7-1.4 4.3H9.7L8.3 9.9z"/><path d="M12 7.2V3.2M15.7 9.9l3.8-1.2M14.3 14.2l2.4 3.3M9.7 14.2l-2.4 3.3M8.3 9.9L4.5 8.7"/></symbol>
+    <symbol id="i-yellow" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-red" viewBox="0 0 24 24"><rect x="6" y="3" width="12" height="18" rx="2.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-sub" viewBox="0 0 24 24"><path d="M4 8h13M13.5 4.5L17 8l-3.5 3.5"/><path d="M20 16H7M10.5 12.5L7 16l3.5 3.5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="currentColor"/></symbol>
+    <symbol id="i-pause" viewBox="0 0 24 24"><rect x="6" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor" stroke="none"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-reset" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 102.6-6.1L3.5 8.5M3.5 3.5v5h5"/></symbol>
+    <symbol id="i-next" viewBox="0 0 24 24"><path d="M5 5l8 7-8 7zM16 5v14"/></symbol>
+    <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V4M7 9l5-5 5 5M4 17v3h16v-3"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v12M7 11l5 5 5-5M4 17v3h16v-3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7.5a2 2 0 002 2h2.5"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l5 5 10-11"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></symbol>
+    <symbol id="i-edit" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 013 3L8 19z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"/><circle cx="12" cy="12" r="2.8"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 6.5A1.5 1.5 0 014.5 5H9l2 2.5h8.5A1.5 1.5 0 0121 9v9.5a1.5 1.5 0 01-1.5 1.5h-15A1.5 1.5 0 013 18.5z"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 01-1 1H5a1 1 0 01-1-1V7a1 1 0 011-1h5"/></symbol>
+    <symbol id="i-zip" viewBox="0 0 24 24"><path d="M5 3h9l5 5v13H5zM13 3v6h6M10 11h2M10 14h2M10 17h2"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M20 12a8 8 0 01-14 5.3M4 12a8 8 0 0114-5.3M18 3v4h-4M6 21v-4h4"/></symbol>
+    <symbol id="i-panel" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M14.5 4v16"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.5L2.5 20h19zM12 10v4.5M12 17.2h.01"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/></symbol>
+    <symbol id="i-copy2" viewBox="0 0 24 24"><rect x="4" y="4" width="12" height="12" rx="2"/><path d="M8 20h10a2 2 0 002-2V8"/></symbol>
+    <symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="1.8"/><path d="M4 18l5.5-5 4 3.5 3-2.5L21 17"/></symbol>
+    <symbol id="i-penalty" viewBox="0 0 24 24"><path d="M3 20V8l2.5-3.5h13L21 8v12"/><path d="M3 8h18M8 8v12M12 8v12M16 8v12M3 14h18"/></symbol>
+ <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 010 11H11"/></symbol>
+    <symbol id="i-compact" viewBox="0 0 24 24"><path d="M4 9V5h4M20 9V5h-4M4 15v4h4M20 15v4h-4"/><rect x="8.5" y="9" width="7" height="6" rx="1.2"/></symbol>
+    <symbol id="i-bench" viewBox="0 0 24 24"><path d="M3 11h18M5 11v6M19 11v6M3 17h18M7 11V7h10v4"/></symbol>
+    <symbol id="i-flag" viewBox="0 0 24 24"><path d="M5 21V4M5 5h13l-2.5 4L18 13H5"/></symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><g fill="currentColor" stroke="none"><circle cx="9" cy="6" r="1.7"/><circle cx="15" cy="6" r="1.7"/><circle cx="9" cy="12" r="1.7"/><circle cx="15" cy="12" r="1.7"/><circle cx="9" cy="18" r="1.7"/><circle cx="15" cy="18" r="1.7"/></g></symbol>
+    <symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9.5h18M3 14.5h18M9 4v16"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 102.6-6.1L3.5 8.5M3.5 3.5v5h5M12 8v4.5l3 1.8"/></symbol>
+    <symbol id="i-redo" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 000 11H13"/></symbol>
+    <symbol id="i-whistle" viewBox="0 0 24 24"><circle cx="9" cy="15" r="5"/><path d="M13.4 11.6L21 9v4l-5.6 1.8M7 6.5V10"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
+    <symbol id="i-live" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M7.5 7.5a6.4 6.4 0 000 9M16.5 7.5a6.4 6.4 0 010 9M4.7 4.7a10.4 10.4 0 000 14.6M19.3 4.7a10.4 10.4 0 010 14.6"/></symbol>
+  </defs>
+</svg>
+
+<div class="app" id="app">
+
+  <!-- ============ BARRA SUPERIOR: marca + navegação + placar ao vivo ============ -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark"><svg class="ico"><use href="#i-live"/></svg></div>
+      <div class="brand-text">
+        <strong>Transmissão <em>OBS</em></strong>
+        <span class="brand-version">v6.2</span>
+      </div>
+    </div>
+
+    <nav class="nav" id="nav" aria-label="Seções do painel">
+      <button class="nav-btn active" data-page="dashboard"><svg class="ico"><use href="#i-dashboard"/></svg><span>Dashboard</span></button>
+      <button class="nav-btn" data-page="times"><svg class="ico"><use href="#i-teams"/></svg><span>Times</span></button>
+      <button class="nav-btn" data-page="escalacao"><svg class="ico"><use href="#i-lineup"/></svg><span>Escalação</span></button>
+      <button class="nav-btn" data-page="partida"><svg class="ico"><use href="#i-match"/></svg><span>Partida</span></button>
+      <button class="nav-btn" data-page="classificacao" title="Tabela de classificação"><svg class="ico"><use href="#i-table"/></svg><span>Classificação</span></button>
+      <button class="nav-btn" data-page="penaltis" title="Disputa de pênaltis"><svg class="ico"><use href="#i-penalty"/></svg><span>Pênaltis</span></button>
+      <button class="nav-btn" data-page="resumo" title="Resumo da partida em PDF ou TXT"><svg class="ico"><use href="#i-doc"/></svg><span>Resumo</span></button>
+      <button class="nav-btn" data-page="arte"><svg class="ico"><use href="#i-art"/></svg><span>Arte</span></button>
+      <button class="nav-btn" data-page="banco"><svg class="ico"><use href="#i-db"/></svg><span>Banco de Dados</span></button>
+      <button class="nav-btn" data-page="config"><svg class="ico"><use href="#i-settings"/></svg><span>Configurações</span></button>
+      <button class="nav-btn" data-page="guia" title="Como configurar"><svg class="ico"><use href="#i-help"/></svg><span>Guia</span></button>
+    </nav>
+
+    <!-- Mini-placar ao vivo: o relógio e o placar ficam sempre à vista, em qualquer aba -->
+    <div class="livebar" id="livebar" title="Placar e relógio ao vivo">
+      <span class="lb-team" id="lbHome">—</span>
+      <span class="lb-score" id="lbScore">0 × 0</span>
+      <span class="lb-team lb-team-away" id="lbAway">—</span>
+      <span class="lb-sep"></span>
+      <span class="lb-clock" id="lbClock">00:00</span>
+      <span class="lb-minute" id="lbMinute">1'</span>
+      <button class="lb-btn" id="lbToggle" title="Iniciar / pausar relógio"><svg class="ico"><use href="#i-play"/></svg></button>
+    </div>
+
+    <div class="conn" id="conn" title="Conexão com o Firebase">
+      <span class="conn-dot" id="connDot"></span><span class="conn-label" id="connLabel">Conectando…</span>
+    </div>
+ <button class="icon-btn undo-btn" id="undoBtn" title="Nada para desfazer" disabled><svg class="ico"><use href="#i-undo"/></svg><span class="undo-count" id="undoCount" hidden>0</span></button>
+    <button class="icon-btn undo-btn" id="redoBtn" title="Nada para refazer" disabled><svg class="ico"><use href="#i-redo"/></svg><span class="undo-count" id="redoCount" hidden>0</span></button>
+    <button class="icon-btn" id="historyBtn" title="Lista de alterações (desfazer e refazer)" aria-haspopup="dialog" aria-expanded="false"><svg class="ico"><use href="#i-history"/></svg></button>
+    <button class="icon-btn" id="dockToggle" title="Mostrar / ocultar prévia"><svg class="ico"><use href="#i-panel"/></svg></button>
+  </header>
+
+  <div class="workspace" id="workspace">
+
+    <!-- ============ ÁREA DE TRABALHO (rola por dentro, nunca a página inteira) ============ -->
+    <main class="content" id="content">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section class="page active" id="page-dashboard">
+        <div class="page-head">
+          <div><h1>Dashboard</h1><p>Visão geral da transmissão e verificação antes de entrar no ar.</p></div>
+        </div>
+        <div class="grid dash-grid">
+          <div class="card span-2">
+            <div class="card-head"><h2>Pronto para transmitir?</h2><span class="badge" id="readyBadge">—</span></div>
+            <ul class="checklist" id="readyList"></ul>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Partida atual</h2><span class="live-pill" id="dashLive" hidden><i></i> AO VIVO</span></div>
+            <div class="dash-match">
+              <div class="dm-team" id="dashHome">Mandante</div>
+              <div class="dm-score" id="dashScore">0 × 0</div>
+              <div class="dm-team dm-away" id="dashAway">Visitante</div>
+            </div>
+            <div class="dm-meta"><span id="dashClock">00:00</span><span id="dashPeriod">1º Tempo</span><span id="dashEvents">0 eventos</span></div>
+            <p class="muted small" id="dashCompetition"></p>
+            <button class="btn" data-go="partida"><svg class="ico"><use href="#i-match"/></svg>Abrir a Partida</button>
+          </div>
+
+          <div class="card span-2">
+            <div class="card-head"><h2>Artes da transmissão</h2><span class="muted small" id="dashConnHint">Aguardando conexões…</span></div>
+            <div class="source-list" id="sourceList"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Banco de dados</h2></div>
+            <div class="stat-row"><div class="stat"><b id="dashTeams">0</b><span>times</span></div><div class="stat"><b id="dashPlayers">0</b><span>jogadores</span></div><div class="stat"><b id="dashBackups">☁</b><span>no Firebase</span></div></div>
+            <p class="muted small">Trazendo dados da versão de computador? Use a área de importação.</p>
+            <button class="btn" data-go="banco"><svg class="ico"><use href="#i-db"/></svg>Banco de Dados</button>
+          </div>
+
+          <div class="card span-2">
+            <div class="card-head"><h2>Painel em outro celular ou computador</h2><span class="badge" id="lanBadge">—</span></div>
+            <p class="muted small">Abra este endereço em qualquer aparelho com internet para controlar o placar. Funciona igual a este painel e mostra o mesmo jogo.</p>
+            <div class="lan-list" id="lanList"></div>
+            <p class="muted small" id="lanHint"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= TIMES ================= -->
+      <section class="page" id="page-times">
+        <div class="page-head">
+          <div><h1>Times</h1><p>Cadastre escudo, cores e elenco. Tudo é salvo automaticamente.</p></div>
+          <span class="save-state" id="teamSaveState"></span>
+        </div>
+        <div class="split">
+          <aside class="card team-list-card">
+            <div class="search"><svg class="ico"><use href="#i-search"/></svg><input type="search" id="teamSearch" placeholder="Buscar time…"></div>
+            <button class="btn btn-primary btn-block" id="newTeamBtn"><svg class="ico"><use href="#i-plus"/></svg>Novo time</button>
+            <button class="btn btn-sm btn-block" id="optCrestsBtn" hidden title="Escudos muito grandes deixam o painel, o OBS e o PDF lentos">Reduzir escudos pesados</button>
+            <div class="team-list" id="teamList"></div>
+          </aside>
+
+          <div class="team-editor" id="teamEditor">
+            <div class="card">
+              <div class="card-head"><h2>Identidade</h2>
+                <div class="row-gap">
+                  <button class="btn btn-sm" id="duplicateTeamBtn"><svg class="ico"><use href="#i-copy2"/></svg>Duplicar</button>
+                  <button class="btn btn-sm btn-danger" id="deleteTeamBtn"><svg class="ico"><use href="#i-trash"/></svg>Excluir</button>
+                </div>
+              </div>
+              <div class="form-grid">
+                <div class="field span-2"><label for="teamName">Nome do time</label><input type="text" id="teamName" placeholder="Ex: Bahia"></div>
+                <div class="field"><label for="teamShort">Sigla <small>(linha do tempo)</small></label><input type="text" id="teamShort" maxlength="4" placeholder="Ex: BAH"></div>
+                <div class="field"><label for="captainSymbol">Símbolo do capitão</label>
+                  <select id="captainSymbol"><option value="(C)">(C)</option><option value="©">©</option></select></div>
+                <div class="field"><label for="teamCity">Cidade</label><input type="text" id="teamCity" placeholder="Ex: Salvador/BA"></div>
+                <div class="field"><label for="teamCoach">Técnico</label><input type="text" id="teamCoach" placeholder="Ex: Rogério Ceni"></div>
+                <div class="field span-2">
+                  <label>Escudo <small>(PNG, JPG ou WebP — reduz sozinho)</small></label>
+                  <div class="crest-row">
+                    <div class="crest-box" id="crestPreview"><svg class="ico"><use href="#i-image"/></svg></div>
+                    <div class="row-gap">
+                      <label class="btn btn-sm" for="teamCrest"><svg class="ico"><use href="#i-upload"/></svg>Escolher imagem</label>
+                      <input type="file" id="teamCrest" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                      <button class="btn btn-sm" id="crestRemoveBtn">Remover</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h2>Cores</h2></div>
+              <p class="muted small">Escolha uma paleta pronta e ajuste cor por cor se quiser. <span class="pal-name" id="teamPaletteName"></span></p>
+              <div class="palette-row" id="teamPaletteRow"></div>
+              <div class="color-grid" id="teamColorGrid"></div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h2>Elenco <span class="badge" id="playersCount">0</span></h2>
+                <div class="row-gap"><button class="btn btn-sm" id="sortByNumber">Nº</button><button class="btn btn-sm" id="sortByName">A–Z</button></div>
+              </div>
+              <form id="playerForm" class="player-form">
+                <div class="field f-num"><label for="playerNumber">Nº</label><input type="number" id="playerNumber" min="0" max="99" required></div>
+                <div class="field f-name"><label for="playerName">Nome</label><input type="text" id="playerName" placeholder="Ex: Eder Chaux" required></div>
+                <div class="field f-pos"><label for="playerPosition">Posição</label><input type="text" id="playerPosition" placeholder="GOL"></div>
+                <div class="field f-notes"><label for="playerNotes">Observações</label><input type="text" id="playerNotes" placeholder="Opcional"></div>
+                <button type="submit" class="btn btn-primary" id="playerSubmit"><svg class="ico"><use href="#i-plus"/></svg><span>Adicionar</span></button>
+                <button type="button" class="btn" id="playerCancel" hidden>Cancelar</button>
+              </form>
+              <div class="table-wrap">
+                <table class="table" id="playersTable"><thead><tr><th class="t-num">Nº</th><th>Nome</th><th>Posição</th><th>Obs.</th><th class="t-act"></th></tr></thead><tbody id="playersTableBody"></tbody></table>
+                <p class="empty" id="playersEmptyMsg">Nenhum jogador ainda. Adicione o primeiro acima.</p>
+              </div>
+            </div>
+          </div>
+          <div class="card empty-card" id="teamEmpty" hidden><svg class="ico big"><use href="#i-teams"/></svg><h2>Nenhum time selecionado</h2><p>Escolha um time na lista ou crie um novo.</p></div>
+        </div>
+      </section>
+
+      <!-- ================= ESCALAÇÃO ================= -->
+      <section class="page" id="page-escalacao">
+        <div class="page-head">
+          <div><h1>Escalação</h1><p>Escolha os times da partida, marque os 11 titulares e os reservas de cada lado.</p></div>
+          <div class="switch-pair">
+            <label class="switch" for="benchOnAirHome"><input type="checkbox" id="benchOnAirHome" data-path="modules.reservasHome" data-type="check"><i></i>
+              <span class="switch-text"><b>Reservas do mandante na arte</b><small>Trocam de lugar com os titulares</small></span></label>
+            <label class="switch" for="benchOnAirAway"><input type="checkbox" id="benchOnAirAway" data-path="modules.reservasAway" data-type="check"><i></i>
+              <span class="switch-text"><b>Reservas do visitante na arte</b><small>Trocam de lugar com os titulares</small></span></label>
+          </div>
+        </div>
+        <div class="grid two">
+          <div class="card" id="lineupHome">
+            <div class="card-head"><h2>Mandante</h2><span class="badge" id="homeStarterCounter">0 / 11</span></div>
+            <div class="field"><label for="homeTeamSelect">Time</label><select id="homeTeamSelect"></select></div>
+            <div class="starter-pool" id="homeStarterPool"></div>
+            <div class="row-gap between">
+              <div class="field grow"><label for="homeCaptainSelect">Capitão</label><select id="homeCaptainSelect"></select></div>
+              <button class="btn btn-sm" id="homeClearBtn">Limpar titulares</button>
+            </div>
+            <div class="bench-block">
+              <div class="card-head"><h3>Reservas</h3><span class="badge" id="homeBenchCounter">0 / 15</span></div>
+              <p class="muted small">Clique nos jogadores que ficam no banco. Quem entra em campo sai daqui sozinho.</p>
+              <div class="starter-pool bench-pool" id="homeBenchPool"></div>
+              <div class="row-gap">
+                <button class="btn btn-sm" id="homeBenchAllBtn">Todos os demais</button>
+                <button class="btn btn-sm" id="homeBenchClearBtn">Limpar reservas</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" id="lineupAway">
+            <div class="card-head"><h2>Visitante</h2><span class="badge" id="awayStarterCounter">0 / 11</span></div>
+            <div class="field"><label for="awayTeamSelect">Time</label><select id="awayTeamSelect"></select></div>
+            <div class="starter-pool" id="awayStarterPool"></div>
+            <div class="row-gap between">
+              <div class="field grow"><label for="awayCaptainSelect">Capitão</label><select id="awayCaptainSelect"></select></div>
+              <button class="btn btn-sm" id="awayClearBtn">Limpar titulares</button>
+            </div>
+            <div class="bench-block">
+              <div class="card-head"><h3>Reservas</h3><span class="badge" id="awayBenchCounter">0 / 15</span></div>
+              <p class="muted small">Clique nos jogadores que ficam no banco. Quem entra em campo sai daqui sozinho.</p>
+              <div class="starter-pool bench-pool" id="awayBenchPool"></div>
+              <div class="row-gap">
+                <button class="btn btn-sm" id="awayBenchAllBtn">Todos os demais</button>
+                <button class="btn btn-sm" id="awayBenchClearBtn">Limpar reservas</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PARTIDA ================= -->
+      <section class="page" id="page-partida">
+        <div class="page-head">
+          <div><h1>Partida</h1><p>Placar, relógio, eventos e histórico — a tela principal durante a transmissão. Arraste os blocos pelo ícone <svg class="ico ico-inline"><use href="#i-grip"/></svg> para organizar do seu jeito.</p></div>
+          <button class="btn btn-sm" id="blocksResetBtn" title="Volta os blocos para a ordem original"><svg class="ico"><use href="#i-reset"/></svg>Restaurar ordem</button>
+        </div>
+        <div class="match-grid">
+          <div class="match-left">
+            <div class="card" data-block="placar">
+              <div class="card-head"><h2>Placar</h2></div>
+              <div class="scoreboard-editor">
+                <div class="score-side">
+                  <span class="score-name" id="scoreHomeLabel">Mandante</span>
+                  <div class="score-controls">
+                    <button class="btn btn-round" data-score="home" data-delta="-1" aria-label="Diminuir mandante"><svg class="ico"><use href="#i-minus"/></svg></button>
+                    <span class="score-value" id="scoreHomeValue">0</span>
+                    <button class="btn btn-round" data-score="home" data-delta="1" aria-label="Aumentar mandante"><svg class="ico"><use href="#i-plus"/></svg></button>
+                  </div>
+                </div>
+                <span class="score-x">×</span>
+                <div class="score-side">
+                  <span class="score-name" id="scoreAwayLabel">Visitante</span>
+                  <div class="score-controls">
+                    <button class="btn btn-round" data-score="away" data-delta="-1" aria-label="Diminuir visitante"><svg class="ico"><use href="#i-minus"/></svg></button>
+                    <span class="score-value" id="scoreAwayValue">0</span>
+                    <button class="btn btn-round" data-score="away" data-delta="1" aria-label="Aumentar visitante"><svg class="ico"><use href="#i-plus"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card" id="onAirCard" data-block="noar">
+              <div class="card-head"><h2>No ar</h2></div>
+              <div class="field"><label>Placar no ar</label>
+                <div class="seg" id="compactSeg" role="group" aria-label="Tamanho do placar">
+                  <button data-compact="0">Completo</button><button data-compact="1">Compacto</button>
+                </div>
+                <small class="field-hint"><b>Completo:</b> nome inteiro do time. <b>Compacto:</b> só a sigla (cadastrada em Times). A troca é na hora, com animação.</small></div>
+              <label class="switch" for="benchOnAirHome2"><input type="checkbox" id="benchOnAirHome2" data-path="modules.reservasHome" data-type="check"><i></i>
+                <span class="switch-text"><b>Reservas do mandante</b><small>Os titulares deslizam e os reservas ocupam o lugar</small></span></label>
+              <label class="switch" for="benchOnAirAway2"><input type="checkbox" id="benchOnAirAway2" data-path="modules.reservasAway" data-type="check"><i></i>
+                <span class="switch-text"><b>Reservas do visitante</b><small>Os titulares deslizam e os reservas ocupam o lugar</small></span></label>
+              <label class="switch" for="finalCardVisible"><input type="checkbox" id="finalCardVisible"><i></i>
+                <span class="switch-text"><b>Cartão de fim de jogo</b><small>Placar final + quem fez os gols — fonte <code>/arte/fim-de-jogo</code></small></span></label>
+            </div>
+
+            <div class="card" data-block="relogio">
+              <div class="card-head"><h2>Relógio</h2><span class="live-pill" id="clockLive" hidden><i></i> CORRENDO</span></div>
+              <div class="clock-face"><div class="clock-big" id="clockDisplay">00:00</div><div class="clock-minute" id="clockDisplayMinute">1'</div></div>
+              <div class="seg" id="periodSeg" role="group" aria-label="Período">
+                <button data-period="1t">1º Tempo</button><button data-period="2t">2º Tempo</button><button data-period="p1">Prorrog. 1</button><button data-period="p2">Prorrog. 2</button>
+              </div>
+              <div class="status-row"><span class="muted small">No placar do OBS:</span>
+                <div class="seg seg-sm" id="statusSeg" role="group" aria-label="Rótulo no placar">
+                  <button data-status="">Relógio</button><button data-status="intervalo">Intervalo</button><button data-status="fim">Fim de jogo</button>
+                </div>
+              </div>
+              <div class="btn-row">
+                <button class="btn btn-primary btn-lg" id="clockStartBtn"><svg class="ico"><use href="#i-play"/></svg>Iniciar</button>
+                <button class="btn btn-lg" id="clockPauseBtn"><svg class="ico"><use href="#i-pause"/></svg>Pausar</button>
+                <button class="btn btn-lg" id="clockNextBtn" title="Zera o relógio e passa para o próximo período"><svg class="ico"><use href="#i-next"/></svg>Próximo período</button>
+                <button class="btn btn-lg btn-danger-ghost" id="clockResetBtn"><svg class="ico"><use href="#i-reset"/></svg>Zerar</button>
+              </div>
+              <div class="btn-row tight">
+                <button class="btn btn-sm" data-clock-delta="-60">−1 min</button><button class="btn btn-sm" data-clock-delta="-1">−1 s</button>
+                <button class="btn btn-sm" data-clock-delta="1">+1 s</button><button class="btn btn-sm" data-clock-delta="60">+1 min</button>
+              </div>
+              <div class="form-grid two">
+                <div class="field"><label for="clockManualInput">Ajustar tempo <small>(só números: 455 vira 4:55)</small></label>
+                  <div class="input-btn"><input type="text" id="clockManualInput" placeholder="45:00" inputmode="numeric" autocomplete="off" maxlength="7"><button class="btn" id="clockManualBtn">Aplicar</button></div></div>
+                <div class="field"><label for="addedTimeInput">Acréscimo <small>(minutos, só visual)</small></label>
+                  <div class="input-btn"><input type="number" id="addedTimeInput" min="0" max="30" step="1" placeholder="Ex: 5"><button class="btn" id="addedTimeApplyBtn">Aplicar</button><button class="btn" id="addedTimeClearBtn" title="Limpar acréscimo"><svg class="ico"><use href="#i-x"/></svg></button></div></div>
+              </div>
+              <p class="muted small">O relógio nunca para sozinho. O acréscimo é apenas informativo — não pausa nem limita o tempo.</p>
+            </div>
+          </div>
+
+          <div class="match-right">
+            <div class="card" data-block="eventos">
+              <div class="card-head"><h2>Lançar evento</h2></div>
+              <div class="event-buttons">
+                <button class="ev-btn ev-goal" data-event="goal"><svg class="ico"><use href="#i-goal"/></svg><span>Gol</span></button>
+                <button class="ev-btn ev-yellow" data-event="yellow"><svg class="ico"><use href="#i-yellow"/></svg><span>Cartão amarelo</span></button>
+                <button class="ev-btn ev-red" data-event="red"><svg class="ico"><use href="#i-red"/></svg><span>Cartão vermelho</span></button>
+                <button class="ev-btn ev-sub" data-event="sub"><svg class="ico"><use href="#i-sub"/></svg><span>Substituição</span></button>
+                <button class="ev-btn ev-annul" id="annulBtn" title="Tira o gol do placar e avisa GOL ANULADO no ar"><svg class="ico"><use href="#i-flag"/></svg><span>Gol anulado</span></button>
+              </div>
+            </div>
+            <div class="card" data-block="outros" id="othersCard">
+              <div class="card-head"><h2>Outros jogos</h2><span class="badge" id="othersBadge">0 jogos</span></div>
+              <div class="others-top">
+                <button class="btn btn-lg others-show" id="othersShowBtn" aria-pressed="false"><svg class="ico"><use href="#i-eye"/></svg><span>Mostrar jogos no ar</span></button>
+                <span class="live-pill" id="othersLivePill" hidden><i></i> NO AR</span>
+              </div>
+              <div class="others-list" id="othersList"></div>
+              <p class="empty" id="othersEmpty">Nenhum jogo cadastrado. Clique em “Adicionar jogo” quando houver outro jogo acontecendo.</p>
+              <div class="btn-row tight">
+                <button class="btn btn-sm btn-primary" id="othersAddBtn"><svg class="ico"><use href="#i-plus"/></svg>Adicionar jogo</button>
+                <button class="btn btn-sm" id="othersTableBtn" data-go="classificacao"><svg class="ico"><use href="#i-table"/></svg>Ver classificação</button>
+                <button class="btn btn-sm btn-danger-ghost" id="othersClearBtn"><svg class="ico"><use href="#i-trash"/></svg>Limpar lista</button>
+              </div>
+              <p class="muted small">Use <b>+</b> quando souber de um gol: o placar daquele jogo sobe e, com a projeção ligada, a classificação muda junto. “No ar” escolhe quais jogos aparecem. <b>Lançar na tabela</b> grava o resultado final nos pontos.</p>
+            </div>
+            <div class="card" data-block="arbitragem" id="officialsCard">
+              <div class="card-head"><h2>Arbitragem</h2><span class="live-pill" id="officialsLivePill" hidden><i></i> NO AR</span></div>
+              <div class="btn-row tight">
+                <button class="btn btn-lg" id="refShowBtn" aria-pressed="false"><svg class="ico"><use href="#i-whistle"/></svg><span>Mostrar arbitragem</span></button>
+                <button class="btn btn-lg" id="varShowBtn" aria-pressed="false"><svg class="ico"><use href="#i-eye"/></svg><span>Mostrar VAR</span></button>
+              </div>
+              <details class="officials-details" id="officialsDetails">
+                <summary>Nomes da arbitragem <span class="muted small" id="officialsCount"></span></summary>
+                <div class="officials-grid" id="officialsGrid"></div>
+                <div class="btn-row tight"><button class="btn btn-sm btn-danger-ghost" id="officialsClearBtn"><svg class="ico"><use href="#i-trash"/></svg>Limpar nomes</button></div>
+              </details>
+            </div>
+            <div class="card" data-block="estadio" id="stadiumCard">
+              <div class="card-head"><h2>Estádio</h2><span class="live-pill" id="stadiumLivePill" hidden><i></i> NO AR</span></div>
+              <div class="btn-row tight">
+                <button class="btn btn-lg" id="stadiumShowBtn" aria-pressed="false"><svg class="ico"><use href="#i-eye"/></svg><span>Mostrar estádio</span></button>
+              </div>
+              <p class="muted small" id="stadiumHint">Tudo é opcional: só o que você preencher aparece no ar e no resumo.</p>
+              <div class="stadium-photos" id="stadiumPhotos"></div>
+              <div class="btn-row tight">
+                <button class="btn btn-sm" id="stadiumAddPhoto"><svg class="ico"><use href="#i-image"/></svg>Adicionar fotos</button>
+                <span class="muted small" id="stadiumPhotoInfo"></span>
+                <input type="file" id="stadiumFile" accept="image/*" multiple hidden>
+              </div>
+              <details class="officials-details" id="stadiumDetails" open>
+                <summary>Dados do estádio</summary>
+                <div class="officials-grid" id="stadiumGrid"></div>
+                <div class="btn-row tight"><button class="btn btn-sm btn-danger-ghost" id="stadiumClearBtn"><svg class="ico"><use href="#i-trash"/></svg>Limpar dados e fotos</button></div>
+              </details>
+            </div>
+            <div class="card grow-card" data-block="historico">
+              <div class="card-head"><h2>Histórico da partida <span class="badge" id="onAirCounter" title="Eventos que aparecem no ar">0 no ar</span></h2>
+                <div class="seg seg-sm" id="historyFilter"><button data-history-count="3">Últimos 3</button><button data-history-count="5" class="active">Últimos 5</button><button data-history-count="all">Todos</button></div>
+              </div>
+              <p class="muted small">A caixa à esquerda de cada evento controla se ele aparece no ar (linha do tempo e escalação). Desmarque para tirar do ar sem apagar o registro.</p>
+              <ul class="events-list" id="eventsList"></ul>
+              <p class="empty" id="eventsEmptyMsg">Nenhum evento registrado ainda.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= CLASSIFICAÇÃO (v6.0) ================= -->
+      <section class="page" id="page-classificacao">
+        <div class="page-head">
+          <div><h1>Classificação</h1><p>Tabela dos times. Só é preciso mexer no dia da transmissão: digite os pontos e escolha entre o modo compacto e o completo.</p></div>
+          <span class="live-pill" id="stOnAirPill" hidden><i></i> NO AR</span>
+        </div>
+        <div class="cl-layout">
+          <div class="cl-left">
+            <div class="card">
+              <div class="card-head"><h2>No ar</h2></div>
+              <label class="switch" for="stVisible"><input type="checkbox" id="stVisible"><i></i>
+                <span class="switch-text"><b>Mostrar classificação no ar</b><small>Fonte <code>/arte/classificacao</code> — só a tabela; entra e sai com animação</small></span></label>
+              <div class="field"><label>Modo da tabela</label>
+                <div class="seg" id="stModeSeg" role="group" aria-label="Modo da tabela"><button data-mode="compact">Compacto</button><button data-mode="complete">Completo</button></div>
+                <small class="field-hint"><b>Compacto:</b> posição, time e pontos. <b>Completo:</b> também jogos, V, E, D, saldo e a legenda das faixas. A troca é na hora, com animação.</small></div>
+              <label class="switch" for="stProjection"><input type="checkbox" id="stProjection"><i></i>
+                <span class="switch-text"><b>Atualizar com os jogos de agora</b><small>Soma o placar dos “Outros jogos” (ao vivo ou encerrados) nos pontos, só na tela</small></span></label>
+              <label class="switch" for="stIncludeMain"><input type="checkbox" id="stIncludeMain"><i></i>
+                <span class="switch-text"><b>Incluir o jogo da transmissão</b><small>Se os times dele estiverem na tabela, ele ganha destaque forte e também entra na projeção</small></span></label>
+              <div class="form-grid two">
+                <div class="field"><label for="stName">Nome da competição</label><input type="text" id="stName" maxlength="60" placeholder="BRASILEIRÃO SÉRIE A"></div>
+                <div class="field"><label for="stRound">Rodada da tabela</label><input type="text" id="stRound" maxlength="12" placeholder="Ex: 28" inputmode="numeric"></div>
+              </div>
+              <small class="field-hint">A rodada da tabela pode ser diferente da rodada do jogo que você transmite (campo <b>Rodada</b> em Configurações) e da de cada jogo paralelo — o OBS mostra a rodada de cada jogo quando ela for diferente.</small>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Faixas da tabela</h2><button class="btn btn-sm" id="zoneResetBtn">Restaurar padrão</button></div>
+              <div class="zone-list" id="zoneList"></div>
+              <div class="btn-row tight"><button class="btn btn-sm" id="zoneAddBtn"><svg class="ico"><use href="#i-plus"/></svg>Adicionar faixa</button></div>
+              <small class="field-hint">Cada faixa pinta a lateral das linhas e aparece na legenda do modo completo. Desmarque para esconder uma faixa.</small>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Colar a tabela</h2></div>
+              <p class="muted small">Cole uma linha por time (de uma planilha ou de um site): <b>nome</b> e <b>pontos</b>. Se quiser, siga com <b>J V E D GP GC</b>. Exemplo: <code>Flamengo 61 28 18 7 3 52 22</code>. Quem já está na tabela é atualizado; nomes novos são adicionados.</p>
+              <textarea id="stPaste" rows="5" spellcheck="false" placeholder="Flamengo 61&#10;Palmeiras 60&#10;Cruzeiro 55"></textarea>
+              <label class="check-line"><input type="checkbox" id="stPasteReplace"> Substituir a lista inteira (só ficam os times colados, na ordem colada)</label>
+              <div class="btn-row tight"><button class="btn btn-primary btn-sm" id="stPasteBtn">Aplicar lista</button></div>
+            </div>
+          </div>
+          <div class="cl-right">
+            <div class="card cl-table-card">
+              <div class="card-head"><h2>Times e pontos</h2>
+                <div class="row-gap">
+                  <button class="btn btn-sm" id="stMoreBtn" aria-pressed="false" title="Mostrar também J, V, E, D, GP e GC">Mais colunas</button>
+                  <button class="btn btn-sm" id="stSortBtn" title="Reordena a lista por pontos"><svg class="ico"><use href="#i-refresh"/></svg>Ordenar por pontos</button>
+                </div>
+              </div>
+              <div class="cl-head" id="clHead"></div>
+              <div class="cl-rows" id="clRows"></div>
+              <datalist id="clNames"></datalist>
+              <p class="cl-crest-hint small" id="clCrestHint"></p>
+              <div class="btn-row tight">
+                <button class="btn btn-sm" id="stAddRowBtn"><svg class="ico"><use href="#i-plus"/></svg>Adicionar time</button>
+                <button class="btn btn-sm btn-danger-ghost" id="stZeroBtn">Zerar pontos</button>
+                <button class="btn btn-sm btn-danger-ghost" id="stResetAllBtn">Voltar aos 20 padrão</button>
+                <button class="btn btn-sm" id="stUndoCommitBtn" hidden><svg class="ico"><use href="#i-undo"/></svg><span></span></button>
+              </div>
+              <p class="muted small">O número à esquerda é a posição pela ordem dos pontos (desempate: vitórias, saldo, gols pró e a ordem da lista). Times com o mesmo nome do cadastro em <b>Times</b> mostram o escudo e ganham o destaque quando jogam a partida da transmissão. As setas mudam a ordem de desempate manualmente.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= RESUMO DA PARTIDA (v6.0) ================= -->
+      <section class="page" id="page-resumo">
+        <div class="page-head">
+          <div><h1>Resumo da partida</h1><p>Um relatório bonito para guardar ou enviar: times, escalações, gols em ordem, cartões e substituições (com o momento do intervalo).</p></div>
+        </div>
+        <div class="sum-layout">
+          <div class="card sum-options">
+            <div class="card-head"><h2>Exportar</h2></div>
+            <div class="field"><label for="sumTitle">Título <small>(opcional)</small></label><input type="text" id="sumTitle" maxlength="80" placeholder="Usa o campeonato e a rodada"></div>
+            <div class="sum-checks">
+              <label class="check-line"><input type="checkbox" data-sum="lineups" checked> Escalações iniciais</label>
+              <label class="check-line"><input type="checkbox" data-sum="bench" checked> Reservas</label>
+              <label class="check-line"><input type="checkbox" data-sum="goals" checked> Gols em ordem</label>
+              <label class="check-line"><input type="checkbox" data-sum="cards" checked> Cartões</label>
+              <label class="check-line"><input type="checkbox" data-sum="subs" checked> Substituições (com o intervalo)</label>
+              <label class="check-line"><input type="checkbox" data-sum="officials" checked> Arbitragem</label>
+              <label class="check-line"><input type="checkbox" data-sum="crests" checked> Escudos</label>
+              <label class="check-line"><input type="checkbox" data-sum="stadium" checked> Estádio (dados e foto de capa)</label>
+            </div>
+            <div class="btn-row">
+              <a class="btn btn-primary btn-lg" id="sumPdfBtn" href="#"><svg class="ico"><use href="#i-download"/></svg>Imprimir / salvar PDF</a>
+              <a class="btn btn-lg" id="sumTxtBtn" href="#" download><svg class="ico"><use href="#i-download"/></svg>Baixar TXT</a>
+              <button class="btn btn-lg" id="sumCopyBtn"><svg class="ico"><use href="#i-copy"/></svg>Copiar texto</button>
+            </div>
+            <p class="muted small">O resumo usa o que está na partida agora. <b>Não precisa encerrar a partida</b>: dá para baixar durante o jogo (parcial) ou no fim. Para o intervalo aparecer separado, clique em <b>Intervalo</b> (Partida → Relógio) antes de lançar as substituições feitas nele.</p>
+          </div>
+          <div class="card sum-preview-card">
+            <div class="card-head"><h2>Prévia</h2><button class="btn btn-sm" id="sumRefreshBtn"><svg class="ico"><use href="#i-refresh"/></svg>Atualizar</button></div>
+            <div class="sum-preview" id="sumPreview"></div>
+          </div>
+        </div>
+      </section>
+
+      
+
+      <!-- ================= PÊNALTIS ================= -->
+      <section class="page" id="page-penaltis">
+        <div class="page-head">
+          <div><h1>Pênaltis</h1><p>Disputa de pênaltis — use só quando o jogo for para as penalidades. Não altera o placar da partida.</p></div>
+          <span class="live-pill" id="penOnAirPill" hidden><i></i> NO AR</span>
+        </div>
+        <div class="pen-layout">
+          <div class="pen-left">
+            <div class="card">
+              <div class="card-head"><h2>Disputa</h2><span class="badge" id="penBadge">Não iniciada</span></div>
+              <label class="switch pen-onair" for="penVisible"><input type="checkbox" id="penVisible"><i></i>
+                <span class="switch-text"><b>Mostrar no ar</b><small>Liga e desliga o cartão em <code>/arte/penaltis</code>. Aparece com animação.</small></span></label>
+              <div class="field"><label>Quem bate primeiro</label>
+                <div class="seg" id="penFirstSeg"><button data-first="home" id="penFirstHome">Mandante</button><button data-first="away" id="penFirstAway">Visitante</button></div>
+                <small class="field-hint" id="penFirstHint">Só dá para mudar antes da primeira cobrança.</small></div>
+              <div class="pen-board" id="penBoard"></div>
+              <div class="pen-banner" id="penBanner"></div>
+            </div>
+          </div>
+          <div class="pen-right">
+            <div class="card">
+              <div class="card-head"><h2>Próxima cobrança</h2></div>
+              <div class="pen-next" id="penNext"></div>
+              <div class="field" id="penShooterField"><label for="penShooter">Batedor <small>(opcional)</small></label>
+                <select id="penShooter"><option value="">— sem nome —</option></select></div>
+              <div class="pen-kick-btns">
+                <button class="btn btn-lg pen-goal" id="penGoalBtn"><svg class="ico"><use href="#i-check"/></svg>GOL</button>
+                <button class="btn btn-lg pen-miss" id="penMissBtn"><svg class="ico"><use href="#i-x"/></svg>PERDEU</button>
+              </div>
+              <div class="btn-row tight">
+                <button class="btn btn-sm" id="penUndoBtn"><svg class="ico"><use href="#i-reset"/></svg>Desfazer última</button>
+                <button class="btn btn-sm btn-danger-ghost" id="penResetBtn"><svg class="ico"><use href="#i-trash"/></svg>Reiniciar disputa</button>
+              </div>
+              <p class="muted small">Clique em um quadrado ao lado para corrigir uma cobrança lançada errado (gol ↔ perdeu). Depois das 5 cobranças de cada time, em caso de empate, segue a morte súbita automaticamente.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= ARTE ================= -->
+      <section class="page" id="page-arte">
+        <div class="page-head">
+          <div><h1>Arte</h1><p>Personalize cada Browser Source. Tudo atualiza o OBS em tempo real — sem recarregar a página.</p></div>
+        </div>
+        <div class="arte-layout">
+          <nav class="subnav" id="arteNav"></nav>
+          <div class="arte-body" id="arteBody"></div>
+        </div>
+      </section>
+
+      <!-- ================= BANCO DE DADOS ================= -->
+      <section class="page" id="page-banco">
+        <div class="page-head">
+          <div><h1>Banco de Dados</h1><p>Seus times, a partida e as configurações ficam guardados no Firebase. Aqui você traz os dados da versão de computador, baixa uma cópia ou recomeça do zero.</p></div>
+        </div>
+
+        <div class="grid db-top">
+          <div class="card db-import">
+            <div class="card-head"><h2><span class="step-num">1</span> Escolha de onde importar</h2></div>
+            <div class="dropzone" id="dropzone" tabindex="0">
+              <svg class="ico big"><use href="#i-upload"/></svg>
+              <strong>Arraste aqui</strong>
+              <span>o <b>.zip</b> da versão de computador, a pasta <b>data</b>, ou arquivos <b>.json</b> (state.json, times ou um backup baixado daqui)</span>
+              <div class="row-gap center">
+                <label class="btn btn-sm" for="dbFileInput"><svg class="ico"><use href="#i-zip"/></svg>Escolher .zip / .json</label>
+                <label class="btn btn-sm" for="dbFolderInput"><svg class="ico"><use href="#i-folder"/></svg>Escolher pasta</label>
+              </div>
+              <input type="file" id="dbFileInput" accept=".zip,.json,application/json,application/zip" multiple hidden>
+              <input type="file" id="dbFolderInput" webkitdirectory directory multiple hidden>
+            </div>
+            <p class="muted small">No computador da versão antiga, use <b>Banco de Dados → Baixar banco de dados</b> (um arquivo .json) ou escolha a pasta <code>data</code> dela. Só os arquivos de dados são lidos.</p>
+            <div class="db-status" id="dbStageStatus" hidden></div>
+          </div>
+
+          <div class="card db-review" id="dbReview">
+            <div class="card-head"><h2><span class="step-num">2</span> Revise e importe</h2></div>
+            <div class="review-empty" id="dbReviewEmpty"><svg class="ico big"><use href="#i-db"/></svg><p>Depois de escolher a origem, o que foi encontrado aparece aqui para você conferir antes de importar.</p></div>
+            <div id="dbReviewBody" hidden></div>
+          </div>
+        </div>
+
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h2>Baixar uma cópia</h2></div>
+            <p class="muted">Baixa todo o banco (times + partida + personalização) em um único arquivo <code>.json</code>. Dá para importar de volta aqui, ou na versão de computador.</p>
+            <div class="row-gap"><button class="btn btn-primary" id="dbExportBtn"><svg class="ico"><use href="#i-download"/></svg>Baixar banco de dados</button></div>
+            <p class="muted small">Guarde uma cópia antes de uma transmissão importante.</p>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Onde ficam os dados</h2></div>
+            <p class="muted small">Tudo é gravado no seu <b>Firebase Realtime Database</b> (caminho <code id="dbPathLabel">placar</code>), a cada alteração. Abrir o painel em outro aparelho mostra o mesmo placar. Uma cópia também fica neste aparelho, para o caso de a internet cair ao abrir o painel.</p>
+            <div class="stat-row"><div class="stat"><b id="dbTeamsN">0</b><span>times</span></div><div class="stat"><b id="dbPlayersN">0</b><span>jogadores</span></div><div class="stat"><b id="dbEventsN">0</b><span>eventos na partida</span></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h2>Começar do zero</h2></div>
+          <p class="muted small">Apaga <b>todos</b> os times, a partida, a classificação e a personalização deste placar no Firebase. Baixe uma cópia antes. Para só reiniciar a partida, use <b>Configurações → Reiniciar partida</b>.</p>
+          <button class="btn btn-danger-ghost" id="dbResetBtn"><svg class="ico"><use href="#i-trash"/></svg>Apagar tudo e recomeçar</button>
+        </div>
+      </section>
+
+      <!-- ================= CONFIGURAÇÕES ================= -->
+      <section class="page" id="page-config">
+        <div class="page-head"><div><h1>Configurações</h1><p>Informações da transmissão e ações gerais.</p></div></div>
+        <div class="grid two">
+          <div class="card">
+            <div class="card-head"><h2>Informações da partida</h2></div>
+            <div class="form-grid">
+              <div class="field span-2"><label for="metaGameName">Nome do jogo / transmissão</label><input type="text" id="metaGameName" data-path="meta.gameName" placeholder="Ex: Final do Campeonato Municipal"></div>
+              <div class="field"><label for="metaCompetition">Campeonato <small>(aparece no placar)</small></label><input type="text" id="metaCompetition" data-path="meta.competition" placeholder="Ex: Copa Cândido Sales 2026"></div>
+              <div class="field"><label for="metaRound">Rodada / fase</label><input type="text" id="metaRound" data-path="meta.round" placeholder="Ex: Semifinal"></div>
+              <div class="field span-2"><label for="metaMatchDate">Data da partida</label><input type="text" id="metaMatchDate" data-path="meta.matchDate" placeholder="Ex: 29/07/2026"></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Ações</h2></div>
+            <p class="muted">Reiniciar a partida zera placar, relógio, eventos e a escalação escolhida. Os times cadastrados <b>não</b> são afetados, e um backup não é necessário.</p>
+            <button class="btn btn-danger" id="matchResetBtn"><svg class="ico"><use href="#i-reset"/></svg>Reiniciar partida</button>
+            <hr class="sep">
+            <div class="card-head"><h2>Painel</h2></div>
+            <p class="muted small">Tamanho da prévia: use os botões P / M / G no topo da prévia, ou o botão de painel no canto superior direito para ocultá-la.</p>
+            <button class="btn btn-sm" id="resetLayoutBtn">Restaurar layout do painel</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Sobre esta versão</h2></div>
+          <p class="muted"><b>Versão 6.2</b> — otimização e correções: estilos de entrada e saída da classificação, dos outros jogos, da arbitragem, do VAR e do estádio voltaram a funcionar (e os mais exagerados foram trocados por versões mais simples); barra de seções do topo que desliza; resumo em PDF sem páginas sobrando e com escudos de qualquer tamanho (a imagem é reduzida ao anexar e arquivos que não sejam imagem são recusados); <b>Módulos visíveis</b> com todos os liga e desliga num só lugar; linha do tempo com até 50 itens. <b>Versão 6.1</b> — a classificação ganhou fonte própria no ar (<code>/arte/classificacao</code>) e os informativos ficaram em <code>/arte/informativos</code>; escudos ligados aos times de forma automática (e escolha manual na tabela) na classificação e em outros jogos; escudos do resumo em PDF sem corte; novos estilos de entrada e saída para classificação, outros jogos, arbitragem, VAR, fim de jogo e pênaltis; bloco Estádio (fotos em slide e ficha) na Partida e no resumo; aviso estiloso a cada cobrança de pênalti; desfazer e refazer valendo para o painel inteiro. <b>Versão 6.0</b> — classificação dos times (compacto e completo, com faixas e projeção ao vivo), outros jogos acontecendo ao mesmo tempo, arbitragem e árbitros de vídeo, resumo da partida em PDF/TXT, lista de desfazer e refazer e contador de 5 substituições. <b>Versão 5.2</b> — gol abre o placar completo e ele fica; aba Áudio com sons automáticos (gol, substituição, cartões, gol anulado), botões de soundpad na Partida e saída própria de áudio para o OBS (<code>/arte/audio</code>); blocos da Partida arrastáveis. <b>Versão 5.1</b> — reservas no lugar dos titulares (um botão por time, com lista que sobe em páginas), ícone de substituição na escalação, acréscimo em destaque no placar, “Ajustar tempo” com máscara mm:ss e correção do placar compacto → completo. <b>Versão 5.0</b> — escalação com reservas, substituição bem visível (faixa SAI → ENTRA), marcações ajustáveis, jogador expulso escurecido e nome do artilheiro piscando; placar com modo compacto (só a sigla), escudo grande, cartões acumulando e aviso de substituição; entrada e saída animadas; cartão de fim de jogo; gol anulado; desfazer geral; visuais salvos; painel pensado para celular e tablet. As Browser Sources anteriores continuam nos mesmos endereços. Veja o <code>README.md</code> para o histórico completo.</p>
+        </div>
+      </section>
+
+      <!-- ================= COMO CONFIGURAR ================= -->
+      <section class="page" id="page-guia">
+        <div class="page-head"><div><h1>Como configurar</h1><p>Passo a passo para deixar tudo pronto no ar — do zero até o ar.</p></div></div>
+        <div class="guide" id="guideBody"></div>
+      </section>
+
+    </main>
+
+    <!-- ============ PRÉVIA (coluna à direita, 16:9, nunca estoura o painel) ============ -->
+    <aside class="dock" id="dock" aria-label="Prévia">
+      <div class="dock-head">
+        <div class="dock-title">Prévia</div>
+        <div class="seg seg-sm" id="dockSize" title="Tamanho da prévia"><button data-size="s">P</button><button data-size="m" class="active">M</button><button data-size="l">G</button></div>
+      </div>
+      <div class="seg seg-wrap" id="dockSources">
+        <button data-preview="all" class="active">Tudo</button>
+        <button data-preview="/arte">Escalação</button>
+        <button data-preview="/arte/placar">Placar</button>
+        <button data-preview="/arte/eventos">Eventos</button>
+        <button data-preview="/arte/linha-do-tempo">Linha do tempo</button>
+        <button data-preview="/arte/penaltis?demo=1">Pênaltis</button>
+        <button data-preview="/arte/fim-de-jogo?demo=1">Fim de jogo</button>
+        <button data-preview="/arte/classificacao?demo=standings">Classificação</button>
+        <button data-preview="/arte/informativos?demo=others">Outros jogos</button>
+        <button data-preview="/arte/informativos?demo=ref">Arbitragem</button>
+        <button data-preview="/arte/informativos?demo=var">VAR</button>
+        <button data-preview="/arte/informativos?demo=stadium">Estádio</button>
+      </div>
+      <div class="stage" id="stage" data-bg="campo"><div class="stage-inner" id="stageInner"></div></div>
+      <div class="dock-foot">
+        <div class="seg seg-sm" id="dockBg" title="Fundo da prévia"><button data-bg="campo" class="active">Campo</button><button data-bg="escuro">Escuro</button><button data-bg="claro">Claro</button></div>
+        <a class="btn btn-sm" id="dockOpen" href="arte/placar/" target="_blank" rel="noopener"><svg class="ico"><use href="#i-link"/></svg>Abrir em tela cheia</a>
+      </div>
+      <p class="muted small dock-note">Tamanho real no ar: 1920×1080. A prévia é só uma redução proporcional.</p>
+    </aside>
+  </div>
+</div>
+
+<!-- ============ LISTA DE ALTERAÇÕES: desfazer e refazer (v6.0) ============ -->
+<div class="history-pop" id="historyPop" role="dialog" aria-label="Lista de alterações" hidden>
+  <div class="hp-head"><h3>Alterações do painel</h3><button class="icon-btn sm" id="historyClose" aria-label="Fechar"><svg class="ico"><use href="#i-x"/></svg></button></div>
+  <p class="muted small">Toque em um item para voltar até ele. O que você desfaz fica em <b>Para refazer</b> até a próxima alteração. Vale para a partida, tabela, outros jogos, arbitragem, estádio, resumo e todos os ajustes da Arte. O relógio e o que está no ar (mostrar/esconder) nunca voltam atrás.</p>
+  <div class="hp-section"><h4>Para refazer <span class="badge" id="hpRedoN">0</span></h4><ul class="hp-list" id="hpRedo"></ul></div>
+  <div class="hp-now"><span>Agora</span></div>
+  <div class="hp-section"><h4>Para desfazer <span class="badge" id="hpUndoN">0</span></h4><ul class="hp-list" id="hpUndo"></ul></div>
+</div>
+
+<!-- ============ MODAL DE EVENTO ============ -->
+<div class="modal-overlay" id="eventModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
+    <div class="modal-head"><span class="modal-icon" id="eventModalIcon"></span><h3 id="eventModalTitle">Gol</h3></div>
+    <div class="field"><label for="eventSideSelect">Time</label>
+      <select id="eventSideSelect"><option value="home">Mandante</option><option value="away">Visitante</option></select></div>
+    <div class="field" id="goalTypeField" hidden><label for="goalTypeSelect">Tipo do gol</label>
+      <select id="goalTypeSelect"><option value="normal">Gol normal</option><option value="penalty">Gol de pênalti</option><option value="own">Gol contra</option></select>
+      <small class="field-hint" id="goalTypeHint" hidden>Escolha o time e o jogador que fez o gol contra — o gol vai para o adversário.</small></div>
+    <div class="field" id="eventPlayerField"><label for="eventPlayerSelect" id="eventPlayerLabel">Jogador</label>
+      <select id="eventPlayerSelect"><option value="">Selecione</option></select></div>
+    <div class="sub-group" id="eventSubGroup" hidden>
+      <div class="sub-field sub-out"><label for="eventPlayerSelectSub"><i></i> Sai de campo</label><select id="eventPlayerSelectSub"><option value="">Selecione titular</option></select></div>
+      <div class="sub-field sub-in"><label for="eventSecondaryPlayerSelect"><i></i> Entra em campo</label><select id="eventSecondaryPlayerSelect"><option value="">Selecione reserva</option></select></div>
+    </div>
+    <div class="field"><label for="eventMinuteOverride">Minuto <small>(opcional — em branco usa o relógio)</small></label>
+      <input type="number" id="eventMinuteOverride" min="0" max="200" placeholder="Ex: 27"></div>
+    <p class="form-error" id="eventModalError" hidden></p>
+    <div class="modal-actions"><button class="btn" id="eventModalCancel">Cancelar</button><button class="btn btn-primary" id="eventModalConfirm">Confirmar</button></div>
+  </div>
+</div>
+
+<!-- ============ MODAL DE GOL ANULADO (v5.0) ============ -->
+<div class="modal-overlay" id="annulModalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="annulModalTitle">
+    <div class="modal-head"><span class="modal-icon ev-red"><svg class="ico"><use href="#i-flag"/></svg></span><h3 id="annulModalTitle">Gol anulado</h3></div>
+    <p class="muted small">O gol sai do placar e das marcações, continua no histórico (riscado) e o OBS mostra o aviso <b>GOL ANULADO</b>.</p>
+    <div class="field"><label for="annulGoalSelect">Qual gol?</label><select id="annulGoalSelect"></select></div>
+    <div class="field"><label for="annulNote">Motivo <small>(opcional — aparece no aviso)</small></label>
+      <input type="text" id="annulNote" maxlength="40" placeholder="Ex: Impedimento (VAR)"></div>
+    <p class="form-error" id="annulModalError" hidden></p>
+    <div class="modal-actions"><button class="btn" id="annulCancel">Cancelar</button><button class="btn btn-danger" id="annulConfirm">Anular gol</button></div>
+  </div>
+</div>
+
+<!-- ============ DIÁLOGO DE CONFIRMAÇÃO ============ -->
+<div class="modal-overlay" id="confirmOverlay">
+  <div class="modal modal-sm" role="alertdialog" aria-modal="true">
+    <h3 id="confirmTitle">Confirmar</h3>
+    <p id="confirmText"></p>
+    <div class="modal-actions"><button class="btn" id="confirmCancel">Cancelar</button><button class="btn btn-primary" id="confirmOk">Confirmar</button></div>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<script src="js/engine.js?v=1.0.0"></script>
+<script src="js/panel/core.js?v=1.0.0"></script>
+<script src="js/panel/palettes.js?v=1.0.0"></script>
+<script src="js/panel/schema.js?v=1.0.0"></script>
+<script src="js/panel/shell.js?v=1.0.0"></script>
+<script src="js/panel/dashboard.js?v=1.0.0"></script>
+<script src="js/panel/times.js?v=1.0.0"></script>
+<script src="js/panel/escalacao.js?v=1.0.0"></script>
+<script src="js/standings-core.js?v=1.0.0"></script>
+<script src="js/panel/partida.js?v=1.0.0"></script>
+<script src="js/panel/informativos.js?v=1.0.0"></script>
+<script src="js/panel/estadio.js?v=1.0.0"></script>
+<script src="js/panel/classificacao.js?v=1.0.0"></script>
+<script src="js/panel/resumo.js?v=1.0.0"></script>
+<script src="js/panel/penaltis.js?v=1.0.0"></script>
+<script src="js/panel/modulos.js?v=1.0.0"></script>
+<script src="js/panel/arte.js?v=1.0.0"></script>
+<script src="js/panel/blocks.js?v=1.0.0"></script>
+<script src="js/panel/banco.js?v=1.0.0"></script>
+<script src="js/panel/config.js?v=1.0.0"></script>
+<script src="js/panel/guia.js?v=1.0.0"></script>
+<script src="js/panel/main.js?v=1.0.0"></script>
+</body>
+</html>
