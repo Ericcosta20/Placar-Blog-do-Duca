@@ -525,3 +525,45 @@ textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 
 /* ---------- Placar App 1.0 ---------- */
 .code-block { background: #0b1220; border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; font-size: 12.5px; overflow: auto; white-space: pre; margin: 8px 0; }
+
+/* ---------- Placar App 1.1 — Patrocinadores ---------- */
+.sp-live-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.sp-stage { position: relative; width: 100%; aspect-ratio: 16 / 9; margin: 10px 0 6px; border-radius: 10px; overflow: hidden; border: 1px solid var(--line);
+  background: repeating-conic-gradient(#1b2331 0% 25%, #121925 0% 50%) 0 0 / 22px 22px; }
+.sp-stage iframe { position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; border: 0; transform-origin: 0 0; background: transparent; pointer-events: none; }
+.sp-controls { display: flex; flex-direction: column; gap: 10px; }
+.sp-now { display: flex; flex-direction: column; gap: 2px; }
+.sp-now b { font-size: 15px; }
+.sp-bar { height: 8px; border-radius: 6px; background: var(--field); border: 1px solid var(--line); overflow: hidden; }
+.sp-bar i { display: block; height: 100%; width: 0; background: var(--accent); }
+.sp-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.sp-queue { display: flex; flex-wrap: wrap; gap: 6px; }
+.sp-chip { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 64px; padding: 5px; border-radius: 8px; border: 1px solid var(--line); background: var(--field); color: var(--text-2); cursor: pointer; }
+.sp-chip img { width: 52px; height: 30px; object-fit: contain; }
+.sp-chip em { width: 52px; height: 30px; display: grid; place-items: center; font-size: 11px; color: var(--muted); font-style: normal; border: 1px dashed var(--line-2); border-radius: 4px; }
+.sp-chip small { font-size: 11px; color: var(--muted); }
+.sp-chip.now { border-color: var(--accent); background: var(--accent-soft); }
+.sp-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-top: 12px; }
+.sp-tile { display: flex; flex-direction: column; gap: 6px; padding: 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-2); }
+.sp-thumb { height: 80px; display: grid; place-items: center; border-radius: 6px; background: repeating-conic-gradient(#1b2331 0% 25%, #121925 0% 50%) 0 0 / 14px 14px; }
+.sp-thumb { overflow: hidden; } .sp-thumb img { max-width: 100%; max-height: 80px; object-fit: contain; }
+.sp-name { width: 100%; }
+.sp-list { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.sp-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--card-2); }
+.sp-n { width: 24px; height: 24px; display: grid; place-items: center; border-radius: 50%; background: var(--field); font-size: 12px; font-weight: 700; flex: none; }
+.sp-rthumb { width: 64px; height: 36px; flex: none; display: grid; place-items: center; border-radius: 6px; background: #121925; font-size: 11px; color: var(--muted); }
+.sp-rthumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.sp-rthumb.empty { border: 1px dashed var(--line-2); }
+.sp-sel { flex: 1 1 180px; min-width: 0; }
+.sp-num { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--text-2); }
+.sp-num.dim { opacity: .45; }
+.sp-num input { width: 64px; }
+.sp-acts { display: flex; gap: 4px; margin-left: auto; }
+.sp-empty { padding: 14px; text-align: center; border: 1px dashed var(--line-2); border-radius: 10px; }
+.sp-publish { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
+.sp-settings { display: flex; flex-direction: column; gap: 14px; }
+.sp-pos { display: flex; align-items: center; gap: 14px; }
+.sp-pos-grid { display: grid; grid-template-columns: repeat(3, 26px); gap: 4px; }
+.sp-pos-grid button { width: 26px; height: 20px; border-radius: 5px; border: 1px solid var(--line-2); background: var(--field); cursor: pointer; padding: 0; }
+.sp-pos-grid button.active { background: var(--accent); border-color: var(--accent); }
+@media (max-width: 900px) { .sp-live-grid { grid-template-columns: 1fr; } .sp-acts { margin-left: 0; } }

@@ -1,4 +1,4 @@
-/* Placar App 1.0 — motor (gerado por build-engine.js a partir de engine-src/). Não edite este arquivo. */
+/* Placar App 1.1 — motor (gerado por build-engine.js a partir de engine-src/). Não edite este arquivo. */
 (() => {
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __commonJS = (cb, mod) => function __require() {
@@ -3425,6 +3425,7 @@
     });
   }
   (async function boot() {
+    if (window.PLACAR_AUTH_READY) await window.PLACAR_AUTH_READY;
     if (!db) {
       banner("Os scripts do Firebase n\xE3o carregaram. Verifique a internet e recarregue a p\xE1gina.", "err");
       return;
@@ -3496,7 +3497,7 @@
       return null;
     };
     function mergeConnections(local) {
-      const sources = { escalacao: 0, placar: 0, eventos: 0, linhaDoTempo: 0, penaltis: 0, fimDeJogo: 0, informativos: 0, classificacao: 0 };
+      const sources = { escalacao: 0, placar: 0, eventos: 0, linhaDoTempo: 0, penaltis: 0, fimDeJogo: 0, informativos: 0, classificacao: 0, patrocinadores: 0 };
       let arte = 0;
       Object.values(connections.presence).forEach((p) => {
         if (p && p.source) {

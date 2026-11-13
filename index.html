@@ -3,20 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel de Controle — Transmissão v5.2</title>
+<title>Placar App 1.1 — Painel de Controle</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&family=Anton&family=Roboto+Condensed:wght@400;600;700&family=League+Gothic&family=Bebas+Neue&display=swap" rel="stylesheet">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="css/panel/base.css">
-<link rel="stylesheet" href="css/panel/layout.css">
-<link rel="stylesheet" href="css/panel/components.css">
-<link rel="stylesheet" href="css/panel/pages.css">
+<link rel="stylesheet" href="css/panel/base.css?v=1.1.0">
+<link rel="stylesheet" href="css/panel/layout.css?v=1.1.0">
+<link rel="stylesheet" href="css/panel/components.css?v=1.1.0">
+<link rel="stylesheet" href="css/panel/pages.css?v=1.1.0">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 </head>
 <body>
+
+<!-- ============ LOGIN (v1.1): o painel só aparece depois de entrar ============ -->
+<div id="loginGate" class="login-gate">
+  <div class="login-card">
+    <div class="login-brand">Placar App</div>
+    <p class="lg-check">Verificando acesso…</p>
+    <form hidden autocomplete="on">
+      <h1>Entrar</h1>
+      <label for="lgEmail">E-mail</label>
+      <input id="lgEmail" name="email" type="email" autocomplete="username" inputmode="email" required>
+      <label for="lgPass">Senha</label>
+      <input id="lgPass" name="password" type="password" autocomplete="current-password" required>
+      <p class="lg-err" role="alert" hidden></p>
+      <button class="btn btn-primary btn-lg" type="submit">Entrar</button>
+    </form>
+  </div>
+</div>
+
 
 <!-- ============ ÍCONES (SVG próprios — não dependem de emoji do sistema) ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -69,6 +88,8 @@
     <symbol id="i-history" viewBox="0 0 24 24"><path d="M3.5 12a8.5 8.5 0 102.6-6.1L3.5 8.5M3.5 3.5v5h5M12 8v4.5l3 1.8"/></symbol>
     <symbol id="i-redo" viewBox="0 0 24 24"><path d="M15 14l5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 000 11H13"/></symbol>
     <symbol id="i-whistle" viewBox="0 0 24 24"><circle cx="9" cy="15" r="5"/><path d="M13.4 11.6L21 9v4l-5.6 1.8M7 6.5V10"/></symbol>
+    <symbol id="i-prev" viewBox="0 0 24 24"><path d="M19 5l-8 7 8 7zM8 5v14"/></symbol>
+    <symbol id="i-sponsor" viewBox="0 0 24 24"><path d="M12 3.5l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.9 6.8 19.7l1-5.9L3.5 9.7l5.9-.8z"/></symbol>
     <symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></symbol>
     <symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></symbol>
     <symbol id="i-live" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="currentColor"/><path d="M7.5 7.5a6.4 6.4 0 000 9M16.5 7.5a6.4 6.4 0 010 9M4.7 4.7a10.4 10.4 0 000 14.6M19.3 4.7a10.4 10.4 0 010 14.6"/></symbol>
@@ -83,7 +104,7 @@
       <div class="brand-mark"><svg class="ico"><use href="#i-live"/></svg></div>
       <div class="brand-text">
         <strong>Transmissão <em>OBS</em></strong>
-        <span class="brand-version">v6.2</span>
+        <span class="brand-version">Placar 1.1</span>
       </div>
     </div>
 
@@ -95,6 +116,7 @@
       <button class="nav-btn" data-page="classificacao" title="Tabela de classificação"><svg class="ico"><use href="#i-table"/></svg><span>Classificação</span></button>
       <button class="nav-btn" data-page="penaltis" title="Disputa de pênaltis"><svg class="ico"><use href="#i-penalty"/></svg><span>Pênaltis</span></button>
       <button class="nav-btn" data-page="resumo" title="Resumo da partida em PDF ou TXT"><svg class="ico"><use href="#i-doc"/></svg><span>Resumo</span></button>
+      <button class="nav-btn" data-page="patrocinadores" title="Logos dos patrocinadores em loop"><svg class="ico"><use href="#i-sponsor"/></svg><span>Patrocinadores</span></button>
       <button class="nav-btn" data-page="arte"><svg class="ico"><use href="#i-art"/></svg><span>Arte</span></button>
       <button class="nav-btn" data-page="banco"><svg class="ico"><use href="#i-db"/></svg><span>Banco de Dados</span></button>
       <button class="nav-btn" data-page="config"><svg class="ico"><use href="#i-settings"/></svg><span>Configurações</span></button>
@@ -587,6 +609,12 @@
       </section>
 
       <!-- ================= BANCO DE DADOS ================= -->
+      <section class="page" id="page-patrocinadores">
+        <div class="page-head"><div><h1>Patrocinadores</h1><p>Monte a playlist de logos, confira no rascunho e só então mande para o ar.</p></div></div>
+        <div id="spRoot"></div>
+      </section>
+
+      <!-- ================= BANCO DE DADOS (v1.0) ================= -->
       <section class="page" id="page-banco">
         <div class="page-head">
           <div><h1>Banco de Dados</h1><p>Seus times, a partida e as configurações ficam guardados no Firebase. Aqui você traz os dados da versão de computador, baixa uma cópia ou recomeça do zero.</p></div>
@@ -641,6 +669,10 @@
       <!-- ================= CONFIGURAÇÕES ================= -->
       <section class="page" id="page-config">
         <div class="page-head"><div><h1>Configurações</h1><p>Informações da transmissão e ações gerais.</p></div></div>
+        <div class="card account-card">
+          <div class="card-head"><h2>Conta</h2></div>
+          <div class="row-gap"><span class="muted">Conectado como <b id="accountEmail">—</b></span><button class="btn" id="logoutBtn">Sair</button></div>
+        </div>
         <div class="grid two">
           <div class="card">
             <div class="card-head"><h2>Informações da partida</h2></div>
@@ -663,7 +695,7 @@
         </div>
         <div class="card">
           <div class="card-head"><h2>Sobre esta versão</h2></div>
-          <p class="muted"><b>Versão 6.2</b> — otimização e correções: estilos de entrada e saída da classificação, dos outros jogos, da arbitragem, do VAR e do estádio voltaram a funcionar (e os mais exagerados foram trocados por versões mais simples); barra de seções do topo que desliza; resumo em PDF sem páginas sobrando e com escudos de qualquer tamanho (a imagem é reduzida ao anexar e arquivos que não sejam imagem são recusados); <b>Módulos visíveis</b> com todos os liga e desliga num só lugar; linha do tempo com até 50 itens. <b>Versão 6.1</b> — a classificação ganhou fonte própria no ar (<code>/arte/classificacao</code>) e os informativos ficaram em <code>/arte/informativos</code>; escudos ligados aos times de forma automática (e escolha manual na tabela) na classificação e em outros jogos; escudos do resumo em PDF sem corte; novos estilos de entrada e saída para classificação, outros jogos, arbitragem, VAR, fim de jogo e pênaltis; bloco Estádio (fotos em slide e ficha) na Partida e no resumo; aviso estiloso a cada cobrança de pênalti; desfazer e refazer valendo para o painel inteiro. <b>Versão 6.0</b> — classificação dos times (compacto e completo, com faixas e projeção ao vivo), outros jogos acontecendo ao mesmo tempo, arbitragem e árbitros de vídeo, resumo da partida em PDF/TXT, lista de desfazer e refazer e contador de 5 substituições. <b>Versão 5.2</b> — gol abre o placar completo e ele fica; aba Áudio com sons automáticos (gol, substituição, cartões, gol anulado), botões de soundpad na Partida e saída própria de áudio para o OBS (<code>/arte/audio</code>); blocos da Partida arrastáveis. <b>Versão 5.1</b> — reservas no lugar dos titulares (um botão por time, com lista que sobe em páginas), ícone de substituição na escalação, acréscimo em destaque no placar, “Ajustar tempo” com máscara mm:ss e correção do placar compacto → completo. <b>Versão 5.0</b> — escalação com reservas, substituição bem visível (faixa SAI → ENTRA), marcações ajustáveis, jogador expulso escurecido e nome do artilheiro piscando; placar com modo compacto (só a sigla), escudo grande, cartões acumulando e aviso de substituição; entrada e saída animadas; cartão de fim de jogo; gol anulado; desfazer geral; visuais salvos; painel pensado para celular e tablet. As Browser Sources anteriores continuam nos mesmos endereços. Veja o <code>README.md</code> para o histórico completo.</p>
+          <p class="muted"><b>Placar App 1.1</b> — login simples para o painel (as artes continuam abertas, sem senha) e módulo <b>Patrocinadores</b>: galeria de logos, playlist em loop com tempos, bloco vazio, rascunho que só vai ao ar no botão “Atualizar no ar”, pausar, pular e reiniciar. <b>Placar App 1.0</b> — versão sem servidor (GitHub Pages + Firebase), baseada na escalação 6.2. <b>Versão 6.2</b> — otimização e correções: estilos de entrada e saída da classificação, dos outros jogos, da arbitragem, do VAR e do estádio voltaram a funcionar (e os mais exagerados foram trocados por versões mais simples); barra de seções do topo que desliza; resumo em PDF sem páginas sobrando e com escudos de qualquer tamanho (a imagem é reduzida ao anexar e arquivos que não sejam imagem são recusados); <b>Módulos visíveis</b> com todos os liga e desliga num só lugar; linha do tempo com até 50 itens. <b>Versão 6.1</b> — a classificação ganhou fonte própria no ar (<code>/arte/classificacao</code>) e os informativos ficaram em <code>/arte/informativos</code>; escudos ligados aos times de forma automática (e escolha manual na tabela) na classificação e em outros jogos; escudos do resumo em PDF sem corte; novos estilos de entrada e saída para classificação, outros jogos, arbitragem, VAR, fim de jogo e pênaltis; bloco Estádio (fotos em slide e ficha) na Partida e no resumo; aviso estiloso a cada cobrança de pênalti; desfazer e refazer valendo para o painel inteiro. <b>Versão 6.0</b> — classificação dos times (compacto e completo, com faixas e projeção ao vivo), outros jogos acontecendo ao mesmo tempo, arbitragem e árbitros de vídeo, resumo da partida em PDF/TXT, lista de desfazer e refazer e contador de 5 substituições. <b>Versão 5.2</b> — gol abre o placar completo e ele fica; aba Áudio com sons automáticos (gol, substituição, cartões, gol anulado), botões de soundpad na Partida e saída própria de áudio para o OBS (<code>/arte/audio</code>); blocos da Partida arrastáveis. <b>Versão 5.1</b> — reservas no lugar dos titulares (um botão por time, com lista que sobe em páginas), ícone de substituição na escalação, acréscimo em destaque no placar, “Ajustar tempo” com máscara mm:ss e correção do placar compacto → completo. <b>Versão 5.0</b> — escalação com reservas, substituição bem visível (faixa SAI → ENTRA), marcações ajustáveis, jogador expulso escurecido e nome do artilheiro piscando; placar com modo compacto (só a sigla), escudo grande, cartões acumulando e aviso de substituição; entrada e saída animadas; cartão de fim de jogo; gol anulado; desfazer geral; visuais salvos; painel pensado para celular e tablet. As Browser Sources anteriores continuam nos mesmos endereços. Veja o <code>README.md</code> para o histórico completo.</p>
         </div>
       </section>
 
@@ -685,6 +717,7 @@
         <button data-preview="all" class="active">Tudo</button>
         <button data-preview="/arte">Escalação</button>
         <button data-preview="/arte/placar">Placar</button>
+        <button data-preview="/arte/patrocinadores">Patrocinadores</button>
         <button data-preview="/arte/eventos">Eventos</button>
         <button data-preview="/arte/linha-do-tempo">Linha do tempo</button>
         <button data-preview="/arte/penaltis?demo=1">Pênaltis</button>
@@ -760,27 +793,30 @@
 
 <div class="toasts" id="toasts" aria-live="polite"></div>
 
-<script src="js/engine.js"></script>
-<script src="js/panel/core.js"></script>
-<script src="js/panel/palettes.js"></script>
-<script src="js/panel/schema.js"></script>
-<script src="js/panel/shell.js"></script>
-<script src="js/panel/dashboard.js"></script>
-<script src="js/panel/times.js"></script>
-<script src="js/panel/escalacao.js"></script>
-<script src="js/standings-core.js"></script>
-<script src="js/panel/partida.js"></script>
-<script src="js/panel/informativos.js"></script>
-<script src="js/panel/estadio.js"></script>
-<script src="js/panel/classificacao.js"></script>
-<script src="js/panel/resumo.js"></script>
-<script src="js/panel/penaltis.js"></script>
-<script src="js/panel/modulos.js"></script>
-<script src="js/panel/arte.js"></script>
-<script src="js/panel/blocks.js"></script>
-<script src="js/panel/banco.js"></script>
-<script src="js/panel/config.js"></script>
-<script src="js/panel/guia.js"></script>
-<script src="js/panel/main.js"></script>
+<script src="js/login.js?v=1.1.0"></script>
+<script src="js/engine.js?v=1.1.0"></script>
+<script src="js/panel/core.js?v=1.1.0"></script>
+<script src="js/panel/palettes.js?v=1.1.0"></script>
+<script src="js/panel/schema.js?v=1.1.0"></script>
+<script src="js/panel/shell.js?v=1.1.0"></script>
+<script src="js/panel/dashboard.js?v=1.1.0"></script>
+<script src="js/panel/times.js?v=1.1.0"></script>
+<script src="js/panel/escalacao.js?v=1.1.0"></script>
+<script src="js/standings-core.js?v=1.1.0"></script>
+<script src="js/panel/partida.js?v=1.1.0"></script>
+<script src="js/panel/informativos.js?v=1.1.0"></script>
+<script src="js/panel/estadio.js?v=1.1.0"></script>
+<script src="js/panel/classificacao.js?v=1.1.0"></script>
+<script src="js/panel/resumo.js?v=1.1.0"></script>
+<script src="js/panel/penaltis.js?v=1.1.0"></script>
+<script src="js/panel/modulos.js?v=1.1.0"></script>
+<script src="js/panel/arte.js?v=1.1.0"></script>
+<script src="js/panel/blocks.js?v=1.1.0"></script>
+<script src="js/sponsors-core.js?v=1.1.0"></script>
+<script src="js/panel/patrocinadores.js?v=1.1.0"></script>
+<script src="js/panel/banco.js?v=1.1.0"></script>
+<script src="js/panel/config.js?v=1.1.0"></script>
+<script src="js/panel/guia.js?v=1.1.0"></script>
+<script src="js/panel/main.js?v=1.1.0"></script>
 </body>
 </html>

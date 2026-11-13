@@ -21,14 +21,20 @@
       <h2>Liberar o banco de dados do Firebase (só na primeira vez)</h2>
       <ol>
         <li>No <b>Firebase Console</b>, abra o projeto → <b>Realtime Database → Regras</b>.</li>
-        <li>Cole as regras abaixo e clique em <b>Publicar</b>. Elas liberam leitura e gravação <b>só</b> para o caminho do placar:
+        <li>Cole as regras abaixo e clique em <b>Publicar</b>. As artes (Camera Live, CameraFi, OBS) <b>leem sem senha</b>; só quem está <b>logado</b> no painel consegue gravar. O aviso “presence” permite que as artes apareçam como conectadas no Dashboard:
           <pre class="code-block">{
   "rules": {
-    "placar": { ".read": true, ".write": true },
-    "$other": { ".read": false, ".write": false }
+    "$sala": {
+      ".read": "$sala.matches(/^placar(_.*)?$/)",
+      ".write": "auth != null &amp;&amp; $sala.matches(/^placar(_.*)?$/)",
+      "presence": { "$id": { ".write": "$sala.matches(/^placar(_.*)?$/)" } }
+    }
   }
-}</pre></li>
-        <li>Quem souber o endereço do banco consegue ler e alterar o placar. Use só durante os jogos e, depois, troque as regras para <code>false</code>. Para mais de um jogo ao mesmo tempo, abra o painel com <code>?sala=quadra2</code> no final do endereço (e as artes com o mesmo final) — cada sala é um placar separado; neste caso as regras precisam liberar também <code>"placar_quadra2"</code>.</li>
+}</pre>
+          Essas regras valem para <code>placar</code> e para qualquer sala (<code>placar_quadra2</code>…).</li>
+        <li><b>Login do painel:</b> no Firebase Console abra <b>Authentication → Sign-in method</b>, ative <b>E-mail/senha</b>. Depois, em <b>Authentication → Users → Add user</b>, crie o seu usuário (e-mail e senha). Não existe tela de cadastro no painel — só quem você criou entra. Em <b>Authentication → Settings → Authorized domains</b>, confira se o endereço <code>seu-usuario.github.io</code> está na lista.</li>
+        <li>Ao abrir o painel, aparece a tela de <b>Entrar</b>. A sessão fica salva no aparelho (não pede senha de novo a cada vez); o botão <b>Sair</b> fica em Configurações. As artes <b>nunca</b> pedem login.</li>
+        <li>Sem login, ninguém consegue alterar o placar nem os patrocinadores (qualquer pessoa ainda consegue <b>ler</b>, que é o que as artes precisam). Para mais de um jogo ao mesmo tempo, abra o painel com <code>?sala=quadra2</code> no final do endereço (e as artes com o mesmo final) — cada sala é um placar separado; neste caso as regras precisam liberar também <code>"placar_quadra2"</code>.</li>
         <li>O painel mostra “Conectado ao Firebase” no Dashboard quando está tudo certo.</li>
       </ol>
     </div></div></div>
@@ -64,11 +70,26 @@
         ${urlRow("/arte/classificacao", "Classificação (opcional)")}
         ${urlRow("/arte/informativos", "Informativos (opcional)")}
       </div>
+      <p><b>Opcional — Patrocinadores (1.1):</b> logos em loop, na ordem e com o tempo que você definir na aba <b>Patrocinadores</b>. Fica transparente quando o bloco é “vazio”:</p>
+      <div class="url-list">
+        ${urlRow("/arte/patrocinadores", "Patrocinadores (opcional)")}
+      </div>
       <ul>
         <li>Empilhe as artes na mesma cena, no tamanho da tela. A posição de cada uma é ajustada na aba <b>Arte</b>, não na transmissão.</li>
         <li>As artes só <b>leem</b> o Firebase: funcionam em qualquer aparelho com internet, sem precisar do painel aberto no mesmo lugar.</li>
       </ul>
       <button class="btn" data-go="dashboard">${App.ico("dashboard")}Ver se as fontes estão conectadas</button>
+    </div></div></div>
+
+    <div class="card guide-card"><div class="guide-step"><span class="step-num">★</span><div>
+      <h2>Patrocinadores (1.1)</h2>
+      <ol>
+        <li>Aba <b>Patrocinadores → Galeria</b>: <b>Adicionar imagens</b> (PNG, JPG ou WebP; o painel reduz para até 700 px). Dê um <b>nome</b> a cada patrocinador no campo abaixo da imagem.</li>
+        <li><b>Playlist (rascunho)</b>: <b>Adicionar bloco</b> (logo) ou <b>Adicionar bloco vazio</b> (tela limpa). Em cada bloco escolha a imagem (ou Vazio), o <b>tempo em segundos</b> e o <b>zoom</b>; reordene com as setas ou exclua.</li>
+        <li><b>Aparência do bloco</b>: tamanho fixo (largura e altura), posição na tela, fundo sólido, margem, animação de entrada e de saída (ou só <i>fade</i>) e movimento leve. O logo sempre cabe dentro do bloco, seja grande ou pequeno.</li>
+        <li>Nada vai ao ar sozinho: confira na prévia <b>Rascunho</b> e clique em <b>Atualizar no ar / Salvar playlist</b>. A playlist começa do primeiro bloco.</li>
+        <li><b>Ao vivo</b>: <b>Pausar/Continuar</b> congela o bloco (com contador de tempo restante), <b>Próximo</b> pula para o próximo bloco (logo ou vazio), <b>Anterior</b>, <b>Reiniciar</b>, clicar em um bloco da fila toca ele na hora e <b>Tirar do ar</b> esconde tudo sem perder o ponto.</li>
+      </ol>
     </div></div></div>
 
     <div class="card guide-card"><div class="guide-step"><span class="step-num">5</span><div>

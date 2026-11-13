@@ -155,7 +155,7 @@
 
   /* ---------- Prévia ---------- */
   const SIZES = { s: 360, m: 460, l: 620 };
-  const ALL = ["/arte", "/arte/placar", "/arte/eventos", "/arte/linha-do-tempo", "/arte/penaltis", "/arte/fim-de-jogo", "/arte/classificacao", "/arte/informativos"];
+  const ALL = ["/arte", "/arte/placar", "/arte/eventos", "/arte/linha-do-tempo", "/arte/penaltis", "/arte/fim-de-jogo", "/arte/classificacao", "/arte/informativos", "/arte/patrocinadores"];
   const prefs = { size: App.store.get("dock_size", window.innerWidth >= 1800 ? "l" : "m"), hidden: App.store.get("dock_hidden", false), bg: App.store.get("dock_bg", "campo"), source: "all" };
   const stage = $("#stage"), inner = $("#stageInner"), workspace = $("#workspace");
   let builtKey = "";

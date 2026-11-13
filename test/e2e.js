@@ -7,8 +7,8 @@ let fails = 0;
 const ok = (c, m) => { console.log((c ? "OK   " : "FALHOU ") + m); if (!c) fails++; };
 (async () => {
   const b = await chromium.launch(); const ctx = await b.newContext({ viewport: { width: 1300, height: 900 } });
-  await ctx.route("https://www.gstatic.com/firebasejs/**", (r) => r.fulfill({ contentType: "application/javascript", body: r.request().url().includes("app-compat") ? MOCK : "" }));
-  await ctx.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  await require("./mock-db-node").attach(ctx);
+  await ctx.addInitScript(() => { try { if (!localStorage.getItem("__mockuser") && location.pathname.indexOf("/arte") < 0) localStorage.setItem("__mockuser", JSON.stringify({ email: "eric@teste.com", uid: "u1" })); } catch (e) {} });
   const errs = []; const watch = (p, n) => { p.on("pageerror", (e) => errs.push(n + ": " + e.message)); p.on("console", (m) => m.type() === "error" && !/Failed to load|net::ERR/.test(m.text()) && errs.push(n + ": " + m.text())); };
   const panel = await ctx.newPage(); watch(panel, "painel");
   await panel.goto(BASE); await panel.waitForFunction(() => typeof App !== "undefined" && App.state, null, { timeout: 8000 });

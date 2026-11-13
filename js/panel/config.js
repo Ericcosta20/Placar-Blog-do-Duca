@@ -12,3 +12,8 @@
   $("#resetLayoutBtn").addEventListener("click", () => { App.resetLayout(); App.toast("Layout do painel restaurado.", "ok"); });
   App.registerPage("config", { render });
 })();
+
+/* v1.1 — sair da conta */
+document.getElementById("logoutBtn").addEventListener("click", async () => {
+  if (await App.confirm("Sair desta conta neste aparelho? Para voltar ao painel será preciso entrar de novo.", { title: "Sair", okText: "Sair" })) window.PLACAR_LOGOUT && window.PLACAR_LOGOUT();
+});

@@ -13,6 +13,6 @@ esbuild.build({
     pdfkit: path.join(root, "engine-src", "shims", "pdfkit.js"),
   },
   define: { __dirname: '"/app/server"', "process.env.NODE_ENV": '"production"' },
-  banner: { js: "/* Placar App 1.0 — motor (gerado por build-engine.js a partir de engine-src/). Não edite este arquivo. */" },
+  banner: { js: "/* Placar App 1.1 — motor (gerado por build-engine.js a partir de engine-src/). Não edite este arquivo. */" },
   logLevel: "info",
 }).catch(() => process.exit(1));

@@ -1,0 +1,41 @@
+/* Arte de patrocinadores (Placar App 1.1) — fundo transparente, bloco sólido de tamanho travado. */
+html, body { margin: 0; width: 1920px; height: 1080px; overflow: hidden; background: transparent; }
+.sp-box { position: fixed; overflow: hidden; box-sizing: border-box; opacity: 0; transition: opacity var(--ms, .6s) ease; }
+.sp-box.on { opacity: 1; }
+.sp-slide { position: absolute; display: flex; align-items: center; justify-content: center; opacity: 0; }
+.sp-slide.cur { opacity: 1; }
+.sp-slide img { display: block; max-width: none; user-select: none; -webkit-user-drag: none; }
+.sp-slide.fit-contain img { object-fit: contain; }
+.sp-slide.fit-cover img { object-fit: cover; }
+
+/* entrada e saída: só opacidade (fade) ou opacidade + um pequeno deslocamento/zoom, conforme o painel */
+.sp-slide.in-fade { animation: spIn-fade var(--ms) ease both; }
+.sp-slide.in-up { animation: spIn-up var(--ms) cubic-bezier(.2, .8, .2, 1) both; }
+.sp-slide.in-down { animation: spIn-down var(--ms) cubic-bezier(.2, .8, .2, 1) both; }
+.sp-slide.in-left { animation: spIn-left var(--ms) cubic-bezier(.2, .8, .2, 1) both; }
+.sp-slide.in-right { animation: spIn-right var(--ms) cubic-bezier(.2, .8, .2, 1) both; }
+.sp-slide.in-zoom { animation: spIn-zoom var(--ms) cubic-bezier(.2, .8, .2, 1) both; }
+.sp-slide.out-fade { animation: spOut-fade var(--ms) ease both; }
+.sp-slide.out-up { animation: spOut-up var(--ms) ease-in both; }
+.sp-slide.out-down { animation: spOut-down var(--ms) ease-in both; }
+.sp-slide.out-left { animation: spOut-left var(--ms) ease-in both; }
+.sp-slide.out-right { animation: spOut-right var(--ms) ease-in both; }
+.sp-slide.out-zoom { animation: spOut-zoom var(--ms) ease-in both; }
+@keyframes spIn-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes spIn-up { from { opacity: 0; transform: translateY(60px); } to { opacity: 1; transform: none; } }
+@keyframes spIn-down { from { opacity: 0; transform: translateY(-60px); } to { opacity: 1; transform: none; } }
+@keyframes spIn-left { from { opacity: 0; transform: translateX(-80px); } to { opacity: 1; transform: none; } }
+@keyframes spIn-right { from { opacity: 0; transform: translateX(80px); } to { opacity: 1; transform: none; } }
+@keyframes spIn-zoom { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes spOut-fade { from { opacity: 1; } to { opacity: 0; } }
+@keyframes spOut-up { to { opacity: 0; transform: translateY(-60px); } }
+@keyframes spOut-down { to { opacity: 0; transform: translateY(60px); } }
+@keyframes spOut-left { to { opacity: 0; transform: translateX(-80px); } }
+@keyframes spOut-right { to { opacity: 0; transform: translateX(80px); } }
+@keyframes spOut-zoom { to { opacity: 0; transform: scale(.6); } }
+
+/* movimento enquanto o logo está na tela (opcional) */
+.sp-box.mo-pulse .sp-slide.cur img { animation: spPulse 2.6s ease-in-out infinite; }
+.sp-box.mo-float .sp-slide.cur img { animation: spFloat 3.2s ease-in-out infinite; }
+@keyframes spPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes spFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }

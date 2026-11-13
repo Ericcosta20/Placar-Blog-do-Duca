@@ -1,5 +1,5 @@
 /**
- * BANCO DE DADOS (Placar App 1.0): importar da versão de computador (zip, pasta data ou .json), baixar uma cópia e recomeçar.
+ * BANCO DE DADOS (Placar App 1.1): importar da versão de computador (zip, pasta data ou .json), baixar uma cópia e recomeçar.
  * Os dados vivem no Firebase; a importação passa pelo motor do painel (evento "engine:import").
  */
 (() => {
@@ -161,7 +161,7 @@
 
   /* ---------- exportar ---------- */
   $("#dbExportBtn").addEventListener("click", () => {
-    const bundle = { format: FORMAT, appVersion: "placar-app-1.0.0", exportedAt: new Date().toISOString(), state: App.state, teams: App.teams };
+    const bundle = { format: FORMAT, appVersion: "placar-app-1.1.0", exportedAt: new Date().toISOString(), state: App.state, teams: App.teams };
     const blob = new Blob([JSON.stringify(bundle)], { type: "application/json" });
     const a = document.createElement("a");
     const d = new Date(), p = (n) => String(n).padStart(2, "0");

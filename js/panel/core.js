@@ -28,6 +28,7 @@ const App = (() => {
     { key: "fimDeJogo", name: "Fim de jogo", path: "/arte/fim-de-jogo", hint: "Opcional — placar final e autores dos gols", optional: true },
     // v6.0 — opcional: classificação, outros jogos, arbitragem e VAR
     { key: "classificacao", name: "Classificação", path: "/arte/classificacao", hint: "Opcional — só a tabela de classificação, já na posição escolhida", optional: true },
+    { key: "patrocinadores", name: "Patrocinadores", path: "/arte/patrocinadores", hint: "Opcional — logos dos patrocinadores em loop", optional: true },
     { key: "informativos", name: "Informativos", path: "/arte/informativos", hint: "Opcional — outros jogos, arbitragem, VAR e estádio", optional: true },
   ];
   /* Placar App 1.0 — endereços das artes (GitHub Pages): "arte/placar/" etc., relativos à página do painel.

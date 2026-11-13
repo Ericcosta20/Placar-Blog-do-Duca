@@ -1,6 +1,6 @@
 {
   "name": "placar-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "description": "Placar App — placar, relógio, escalação e eventos para transmissões, em páginas estáticas (GitHub Pages) + Firebase Realtime Database.",
   "scripts": { "build": "node build-engine.js", "serve": "npx serve ." },

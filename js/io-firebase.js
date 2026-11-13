@@ -1,5 +1,5 @@
 /**
- * io() das ARTES (Placar App 1.0) — no lugar do Socket.IO.
+ * io() das ARTES (Placar App 1.1) — no lugar do Socket.IO.
  * As artes continuam escutando "state:sync", "teams:sync", "clock:tick" e os efeitos (art:replay…),
  * só que agora esses eventos vêm do Firebase:
  *   placar/stateJson  -> state:sync        placar/teamsJson -> teams:sync

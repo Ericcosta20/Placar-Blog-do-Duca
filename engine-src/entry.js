@@ -1,5 +1,5 @@
 /**
- * MOTOR NO NAVEGADOR (Placar App 1.0)
+ * MOTOR NO NAVEGADOR (Placar App 1.1)
  * ---------------------------------------------------------------------------------------------
  * Na versão de computador existia um servidor (Node + Socket.IO). Aqui a MESMA lógica (pasta server/)
  * roda dentro da página do painel:
@@ -124,6 +124,7 @@ function loadTeamsIntoFs(json) {
 
 /* ---------------------------------------------------------------- Boot */
 (async function boot() {
+  if (window.PLACAR_AUTH_READY) await window.PLACAR_AUTH_READY;   // v1.1: só abre o banco depois do login
   if (!db) { banner("Os scripts do Firebase não carregaram. Verifique a internet e recarregue a página.", "err"); return; }
   banner("Abrindo o banco de dados do placar.");
   const online = await waitConnected(10000);
@@ -177,7 +178,7 @@ function loadTeamsIntoFs(json) {
     return null;
   };
   function mergeConnections(local) {
-    const sources = { escalacao: 0, placar: 0, eventos: 0, linhaDoTempo: 0, penaltis: 0, fimDeJogo: 0, informativos: 0, classificacao: 0 };
+    const sources = { escalacao: 0, placar: 0, eventos: 0, linhaDoTempo: 0, penaltis: 0, fimDeJogo: 0, informativos: 0, classificacao: 0, patrocinadores: 0 };
     let arte = 0;
     Object.values(connections.presence).forEach((p) => { if (p && p.source) { sources[p.source] = (sources[p.source] || 0) + 1; arte++; } });
     return { ...local, arte, sources, total: (local.panel || 0) + (local.previews || 0) + arte };
